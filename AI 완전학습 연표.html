@@ -1,0 +1,1360 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>AI 완전학습 연표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: 간트식 작업대 — 왼쪽 분야(트랙) 열, 오른쪽 연도축, 상단 학습 진도, 하단 전체 연표 슬라이더 */
+:root{
+  --bg:#eceef3;
+  --surface:#fbfbfd;
+  --sunk:#f0f1f6;
+  --ink:#171c2b;
+  --muted:#5d6478;
+  --line:#d5d9e3;
+  --grid:rgba(23,28,43,.07);
+  --accent:#3a46a8;
+  --accent-ink:#ffffff;
+  --now:#c8553d;
+  --ok:#2f8a5b;
+  --danger:#b03a2e;
+  --shadow:0 10px 30px rgba(20,24,45,.14);
+  --f-display:"Gothic A1","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-body:"Gothic A1","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --lw:164px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0e1018; --surface:#151826; --sunk:#1b1f30; --ink:#e6e8f0; --muted:#949ab0; --line:#2a2f45;
+  --grid:rgba(230,232,240,.06); --accent:#8f9bff; --accent-ink:#0e1018; --now:#ee8a6f; --ok:#5fc48c; --danger:#ee8a6f;
+  --shadow:0 12px 34px rgba(0,0,0,.55); color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0e1018; --surface:#151826; --sunk:#1b1f30; --ink:#e6e8f0; --muted:#949ab0; --line:#2a2f45;
+  --grid:rgba(230,232,240,.06); --accent:#8f9bff; --accent-ink:#0e1018; --now:#ee8a6f; --ok:#5fc48c; --danger:#ee8a6f;
+  --shadow:0 12px 34px rgba(0,0,0,.55); color-scheme:dark }
+
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;overflow:hidden}
+.app{height:100%;display:flex;flex-direction:column;gap:10px;padding-inline:16px;padding-block:12px;box-sizing:border-box}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:disabled{cursor:default}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* header */
+.top{display:flex;flex-direction:column;gap:10px}
+.headrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1 1 300px}
+.mark{flex:none;width:34px;height:34px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-family:var(--f-mono);font-size:20px;font-weight:500;border-radius:7px}
+#title{flex:1;min-width:0;border:0;background:transparent;font-family:var(--f-display);font-size:clamp(20px,2.4vw,26px);font-weight:800;letter-spacing:-.01em;padding:2px 4px;border-radius:6px}
+#title:hover{background:var(--sunk)}
+.prog{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);flex:0 1 380px;min-width:0}
+.prog b{font-family:var(--f-mono);font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pbar{flex:1;min-width:60px;height:8px;border-radius:4px;background:var(--sunk);border:1px solid var(--line);overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+#pg-pct{font-family:var(--f-mono);color:var(--ok);font-weight:500;min-width:3.2em;text-align:right}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.grp{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow:hidden}
+.grp>button{border:0;background:transparent;padding:7px 11px;white-space:nowrap;font-size:13px;font-weight:600}
+.grp>button+button{border-left:1px solid var(--line)}
+.grp>button:hover:not(:disabled){background:var(--sunk)}
+.grp>button.pri{background:var(--accent);color:var(--accent-ink)}
+.grp>button.pri:hover{filter:brightness(1.08);background:var(--accent)}
+.grp>button:disabled{opacity:.35}
+.grp>button.warn{color:var(--danger)}
+.grp>button.on{background:var(--ok);color:#fff}
+.zoomgrp{padding-right:4px}
+#zoom{width:100px;accent-color:var(--accent);margin:0 6px}
+.field{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:0 4px 0 10px}
+.field select{border:0;background:transparent;padding:7px 4px;font-size:13px;color:var(--ink);font-weight:600}
+#q{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:7px 10px;width:150px;font-size:13px}
+
+/* board */
+.board{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;position:relative;border:1px solid var(--line);border-radius:10px;background:var(--surface);overscroll-behavior:contain}
+.ruler{position:sticky;top:0;z-index:8;display:flex;background:var(--surface);border-bottom:1px solid var(--line)}
+.corner{width:var(--lw);flex:none;box-sizing:border-box;border-right:1px solid var(--line);padding:0 12px;display:flex;align-items:center;font-size:11px;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.rtrack{position:relative;flex:1;min-width:0;height:44px;overflow:hidden}
+.tick{position:absolute;top:0;bottom:0;border-left:1px solid var(--line)}
+.tick span{position:absolute;top:5px;left:5px;font-family:var(--f-mono);font-size:11px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.tick.dec span{color:var(--ink);font-weight:500}
+.nowtag{position:absolute;top:4px;transform:translateX(-50%);font-family:var(--f-mono);font-size:10px;background:var(--now);color:#fff;padding:1px 5px;border-radius:3px;z-index:2}
+.bandtag{position:absolute;bottom:4px;height:15px;line-height:15px;font-size:10px;font-weight:700;padding:0 5px;border-radius:3px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;box-sizing:border-box}
+.row{display:flex;border-bottom:1px solid var(--line);position:relative}
+.row.drop-before{box-shadow:inset 0 3px 0 var(--accent)}
+.row.drop-after{box-shadow:inset 0 -3px 0 var(--accent)}
+.label{width:var(--lw);flex:none;box-sizing:border-box;border-right:1px solid var(--line);padding:10px 10px 10px 6px;display:flex;gap:7px;align-items:flex-start;cursor:pointer;background:var(--surface);user-select:none}
+.label:hover{background:var(--sunk)}
+.row.csel .label{background:var(--sunk);box-shadow:inset 3px 0 0 var(--accent)}
+.grip{flex:none;width:10px;height:22px;cursor:grab;touch-action:none;background-image:radial-gradient(circle,var(--muted) 1.2px,transparent 1.4px);background-size:5px 5px;opacity:.55}
+.grip:hover{opacity:1}
+.chip{flex:none;width:10px;height:10px;border-radius:2px;margin-top:5px}
+.ln{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+.ln b{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ln small{font-size:11px;color:var(--muted);font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.mini-bar{height:3px;border-radius:2px;background:var(--sunk);overflow:hidden}
+.mini-bar i{display:block;height:100%;background:var(--ok)}
+.track{position:relative;flex:1;min-width:0;overflow:hidden;touch-action:pan-y;cursor:grab}
+.board.panning .track{cursor:grabbing}
+.gl{position:absolute;top:0;bottom:0;width:1px;background:var(--grid);pointer-events:none}
+.band{position:absolute;top:0;bottom:0;opacity:.11;pointer-events:none;background:repeating-linear-gradient(135deg,var(--c) 0 6px,transparent 6px 12px)}
+.nowline{position:absolute;top:0;bottom:0;border-left:1.5px dashed var(--now);opacity:.6;pointer-events:none;z-index:1}
+
+.bar{position:absolute;height:26px;box-sizing:border-box;border-radius:5px;background:var(--c);display:flex;align-items:center;gap:6px;padding:0 10px;cursor:grab;touch-action:none;overflow:hidden;white-space:nowrap;font-size:12.5px;font-weight:700;z-index:3;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14);user-select:none}
+.bar.cl{border-top-left-radius:0;border-bottom-left-radius:0}
+.bar.cr{border-top-right-radius:0;border-bottom-right-radius:0}
+.bar:hover{z-index:5;filter:brightness(1.06)}
+.bar .bt{overflow:hidden;text-overflow:ellipsis}
+.bar .by{font-family:var(--f-mono);font-size:10.5px;font-weight:500;opacity:.78;font-variant-numeric:tabular-nums}
+.bar .ck{font-size:12px}
+.bar .h{position:absolute;top:0;bottom:0;width:9px;cursor:ew-resize;z-index:1}
+.bar .h.l{left:0}.bar .h.r{right:0}
+.bar .h::after{content:"";position:absolute;top:7px;bottom:7px;left:3px;width:3px;border-left:1px solid currentColor;border-right:1px solid currentColor;opacity:0}
+.bar:hover .h::after,.bar.sel .h::after{opacity:.6}
+.sel{outline:2px solid var(--ink);outline-offset:2px;z-index:6!important}
+.dim{opacity:.16}
+
+.evt{position:absolute;height:20px;display:flex;align-items:center;gap:5px;cursor:grab;touch-action:none;white-space:nowrap;font-size:12px;z-index:2;user-select:none}
+.evt::after{content:"";position:absolute;left:4.5px;top:15px;height:var(--stem);border-left:1.5px dashed var(--c);opacity:.45;pointer-events:none}
+.evt .dot{flex:none;width:10px;height:10px;box-sizing:border-box;border-radius:50%;background:var(--c);border:1.5px solid var(--surface);box-shadow:0 0 0 1px var(--c)}
+.evt .et{font-weight:700;background:var(--surface);border:1px solid var(--line);padding:1px 6px;border-radius:4px}
+.evt.done .et{border-color:var(--ok)}
+.evt.done .et::before{content:"✓ ";color:var(--ok)}
+.evt .ey{font-family:var(--f-mono);font-size:10.5px;color:var(--muted)}
+.evt:hover{z-index:5}
+.evt:hover .et{border-color:var(--c)}
+.evt.mini{height:12px}
+.evt.mini .dot{width:9px;height:9px}
+.evt.mini::after{top:11px}
+.evt.sel{outline-offset:3px;border-radius:4px}
+
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+
+/* footer + navigator */
+.foot{display:flex;flex-direction:column;gap:6px}
+.nav{position:relative;height:66px;border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden;touch-action:none;cursor:pointer;user-select:none}
+.ntk{position:absolute;top:0;bottom:0;border-left:1px solid var(--grid)}
+.ntk span{position:absolute;top:2px;left:4px;font-family:var(--f-mono);font-size:9.5px;color:var(--muted);white-space:nowrap}
+.np{position:absolute;height:3px;border-radius:2px;opacity:.85}
+.ne{position:absolute;width:2px;height:7px}
+.nb{position:absolute;top:0;bottom:0;opacity:.14}
+.shade{position:absolute;top:0;bottom:0;background:var(--bg);opacity:.55;pointer-events:none}
+.brush{position:absolute;top:0;bottom:0;box-sizing:border-box;border:2px solid var(--accent);border-radius:8px;cursor:grab;background:transparent}
+.brush:active{cursor:grabbing}
+.bh{position:absolute;top:0;bottom:0;width:14px;cursor:ew-resize}
+.bh.l{left:-7px}.bh.r{right:-7px}
+.bh::after{content:"";position:absolute;left:4px;top:50%;width:6px;height:22px;margin-top:-11px;border-radius:3px;background:var(--accent)}
+.hint{margin:0;font-size:11.5px;color:var(--muted);line-height:1.5}
+.hint kbd{font-family:var(--f-mono);font-size:10.5px;border:1px solid var(--line);border-bottom-width:2px;border-radius:3px;padding:0 4px;background:var(--surface)}
+
+/* inspector */
+#insp{position:fixed;right:24px;top:150px;width:340px;max-height:calc(100% - 178px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:30}
+.ih{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:1}
+.ih h2{margin:0;font-family:var(--f-display);font-size:18px;font-weight:800;line-height:1.3;text-wrap:balance}
+.ih .kind{font-size:11px;letter-spacing:.04em;color:var(--muted);display:block;font-weight:600;margin-bottom:2px}
+.x{border:0;background:transparent;font-size:20px;line-height:1;padding:4px 8px;border-radius:6px;color:var(--muted)}
+.x:hover{background:var(--sunk)}
+.ib{padding:14px;display:flex;flex-direction:column;gap:12px}
+.study{display:flex;gap:8px;align-items:stretch}
+.learn{flex:1;border:1.5px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px;font-weight:700;font-size:13px;text-align:left}
+.learn.on{border-color:var(--ok);background:var(--ok);color:#fff}
+.stepper{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.stepper button{border:0;background:var(--bg);padding:0 11px;font-weight:700}
+.stepper button+button{border-left:1px solid var(--line)}
+.stepper button:hover{background:var(--sunk)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+.meta .yrs{font-family:var(--f-mono);color:var(--ink);font-weight:500}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{font-size:11px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--sunk);border:1px solid var(--line)}
+.ib label.f{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--muted);font-weight:600}
+.ib input[type=text],.ib input[type=number],.ib select,.ib textarea{border:1px solid var(--line);border-radius:7px;background:var(--bg);padding:7px 9px;font-size:14px;color:var(--ink);min-width:0;font-weight:400}
+.ib textarea{resize:vertical;min-height:96px;line-height:1.6}
+.ib details{border-top:1px solid var(--line);padding-top:10px}
+.ib summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--muted)}
+.ib details[open] summary{margin-bottom:12px}
+.ib details>div{display:flex;flex-direction:column;gap:12px}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:7px;font-size:13px;font-weight:600}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--accent);color:var(--accent-ink)}
+.yr2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.yr2 input{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.chk{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:500}
+.chk input{accent-color:var(--accent);width:16px;height:16px}
+.sws{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.sw{aspect-ratio:1;max-width:100%;border-radius:6px;border:0;background:var(--c);box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+.sw.on{outline:2px solid var(--ink);outline-offset:2px}
+.swc{position:relative;aspect-ratio:1;border-radius:6px;overflow:hidden;border:1px dashed var(--muted);display:grid;place-items:center;font-size:15px;color:var(--muted)}
+.swc input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.btn{border:1px solid var(--line);background:var(--bg);border-radius:7px;padding:7px 12px;font-size:13px;font-weight:600}
+.btn:hover:not(:disabled){border-color:var(--muted)}
+.btn:disabled{opacity:.4}
+.btn.danger{color:var(--danger)}
+.btn.armed{background:var(--danger);color:#fff;border-color:var(--danger)}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.small{font-size:12px;color:var(--muted);margin:0;line-height:1.5}
+
+/* tooltip */
+#tip{position:fixed;z-index:40;pointer-events:none;max-width:280px;background:var(--ink);color:var(--surface);border-radius:8px;padding:8px 10px;font-size:12px;line-height:1.5;box-shadow:var(--shadow)}
+#tip b{display:block;font-size:13px}
+#tip .m{font-family:var(--f-mono);font-size:11px;opacity:.8}
+#tip .n{margin-top:4px;opacity:.88}
+
+/* modals */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(10,12,24,.48);display:grid;place-items:center;padding:16px}
+.dlg{width:min(680px,100%);max-height:100%;overflow:auto;box-sizing:border-box;background:var(--surface);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+.dlg h2{margin:0;font-family:var(--f-display);font-size:19px;font-weight:800}
+.dlg p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}
+.dlg textarea{min-height:260px;font-family:var(--f-mono);font-size:12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:10px;resize:vertical;color:var(--ink)}
+.mrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mrow .sp{flex:1}
+#m-file{font-size:12px;max-width:100%}
+.dhead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+/* path list */
+.pfilters{display:flex;flex-wrap:wrap;gap:8px}
+.pfilters select,.pfilters input{border:1px solid var(--line);border-radius:7px;background:var(--bg);padding:7px 9px;font-size:13px}
+.pfilters input[type=search]{flex:1;min-width:140px}
+.plist{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:10px;overflow:auto;max-height:min(56vh,560px)}
+.plist li{display:grid;grid-template-columns:24px 52px 1fr;gap:10px;align-items:start;padding:9px 12px;border-bottom:1px solid var(--line)}
+.plist li:last-child{border-bottom:0}
+.plist li.dec{background:var(--sunk);font-family:var(--f-mono);font-size:11px;font-weight:500;color:var(--muted);padding:4px 12px;display:block;position:sticky;top:0;z-index:1}
+.plist input{accent-color:var(--ok);width:16px;height:16px;margin-top:2px}
+.plist .py{font-family:var(--f-mono);font-size:12px;color:var(--muted);padding-top:1px;font-variant-numeric:tabular-nums}
+.plist .pt{display:flex;flex-direction:column;gap:3px;min-width:0}
+.plist .pt button{border:0;background:transparent;padding:0;text-align:left;font-weight:700;font-size:14px}
+.plist .pt button:hover{color:var(--accent);text-decoration:underline}
+.plist .pn{font-size:12px;color:var(--muted);line-height:1.5}
+.plist .tr{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.plist .tr i{width:8px;height:8px;border-radius:2px}
+.plist li.done .pt button{color:var(--muted);text-decoration:line-through}
+
+/* flashcard */
+.card{border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:18px;display:flex;flex-direction:column;gap:12px;min-height:220px}
+.card .ctop{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.card .ctop .tr{display:inline-flex;align-items:center;gap:5px;font-weight:700;color:var(--ink)}
+.card .ctop .tr i{width:9px;height:9px;border-radius:2px}
+.card .cy{font-family:var(--f-mono);font-size:13px;color:var(--ink)}
+.card .q{font-size:15px;line-height:1.7;margin:0}
+.card .mask{display:inline-block;min-width:3em;border-bottom:2px solid var(--muted);color:transparent;user-select:none}
+.card .ans{font-family:var(--f-display);font-size:24px;font-weight:800;margin:0;color:var(--accent)}
+.card .who{font-size:13px;color:var(--muted)}
+
+#toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:8px 14px;border-radius:8px;font-size:13px;z-index:60;box-shadow:var(--shadow);max-width:calc(100% - 32px);box-sizing:border-box}
+
+@media (max-width:760px){
+  :root{--lw:100px}
+  .app{padding-block:8px;gap:8px}
+  .ln small{display:none}
+  .grip{display:none}
+  .label{padding-left:10px}
+  #q{width:100%;order:9}
+  #zoom{width:64px}
+  .hint{display:none}
+  .prog{flex-basis:100%}
+  #insp{left:0;right:0;top:auto;bottom:0;width:auto;max-height:64%;border-radius:14px 14px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
+  .plist li{grid-template-columns:22px 44px 1fr;gap:8px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="headrow">
+      <div class="brand">
+        <span class="mark" aria-hidden="true">∇</span>
+        <input id="title" type="text" aria-label="차트 제목" spellcheck="false">
+      </div>
+      <div class="prog" title="학습 완료로 표시한 항목의 비율">
+        <span>학습 진도</span><b id="pg-n">0 / 0</b>
+        <div class="pbar"><i id="pg-bar"></i></div><span id="pg-pct">0%</span>
+      </div>
+    </div>
+    <div class="tools">
+      <div class="grp">
+        <button id="add-period" class="pri" title="보이는 구간 가운데에 기간 추가">+ 기간</button>
+        <button id="add-event" title="보이는 구간 가운데에 사건 추가">+ 사건</button>
+        <button id="add-track">+ 분야</button>
+      </div>
+      <div class="grp">
+        <button id="open-path" title="모든 항목을 시간순 목록으로 보기">학습 경로</button>
+        <button id="open-card" title="제목을 가린 카드로 복습">카드 복습</button>
+        <button id="todo" aria-pressed="false" title="학습 완료한 항목을 흐리게">미학습 강조</button>
+      </div>
+      <div class="grp">
+        <button id="undo" title="되돌리기 (Ctrl+Z)" aria-label="되돌리기">↶</button>
+        <button id="redo" title="다시 실행 (Ctrl+Y)" aria-label="다시 실행">↷</button>
+      </div>
+      <div class="grp zoomgrp">
+        <button id="zoom-out" title="축소" aria-label="축소">−</button>
+        <input id="zoom" type="range" min="0" max="1000" aria-label="확대 정도">
+        <button id="zoom-in" title="확대" aria-label="확대">+</button>
+        <button id="fit" title="모든 항목이 보이도록 맞춤">전체</button>
+      </div>
+      <label class="field">시대
+        <select id="era">
+          <option value="">바로가기</option>
+          <option value="0">태동기 1940–1975</option>
+          <option value="1">겨울과 부활 1968–2000</option>
+          <option value="2">통계적 ML 1985–2012</option>
+          <option value="3">딥러닝 혁명 2005–2020</option>
+          <option value="4">LLM·생성형 AI 2013–현재</option>
+          <option value="5">최근 흐름 2022–현재</option>
+        </select>
+      </label>
+      <label class="field">스냅
+        <select id="snap"><option value="1">1년</option><option value="5">5년</option><option value="10">10년</option></select>
+      </label>
+      <input id="q" type="search" placeholder="개념·인물 검색 후 Enter" aria-label="검색">
+      <div class="grp">
+        <button id="export">내보내기</button>
+        <button id="import">가져오기</button>
+        <button id="reset" title="예시 연표로 되돌립니다">예시</button>
+        <button id="clear">비우기</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="board" id="board">
+    <div class="ruler"><div class="corner">분야 · 연도</div><div class="rtrack" id="rtrack"></div></div>
+    <div id="rows"></div>
+  </main>
+
+  <footer class="foot">
+    <div class="nav" id="nav" title="창을 끌어 이동하고 양 끝을 끌어 보는 구간을 늘이거나 줄입니다"></div>
+    <p class="hint">항목 클릭: 학습 카드 · 빈 곳 <kbd>더블클릭</kbd>: 기간 추가 · 막대 끌기: 연도 이동, 위아래로 다른 분야로 · 막대 끝 끌기: 기간 늘이기 · 배경 끌기 / <kbd>Shift</kbd>+휠: 시간 이동 · <kbd>Ctrl</kbd>+휠: 확대 · <kbd>[</kbd> <kbd>]</kbd> 이전/다음 개념 · <kbd>L</kbd> 학습 완료 · <kbd>Del</kbd> 삭제 · 빗금 구간은 'AI 겨울' 같은 시대 배경입니다.</p>
+  </footer>
+</div>
+
+<aside id="insp" hidden></aside>
+<div id="tip" hidden></div>
+<div id="toast" hidden></div>
+
+<div class="modal" id="modal" hidden>
+  <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <h2 id="m-title"></h2>
+    <p id="m-desc"></p>
+    <textarea id="m-text" spellcheck="false"></textarea>
+    <div class="mrow">
+      <input id="m-file" type="file" accept=".json,application/json">
+      <span class="sp"></span>
+      <button class="btn" id="m-copy">복사</button>
+      <button class="btn pri" id="m-apply">적용</button>
+      <button class="btn" id="m-close">닫기</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="path" hidden>
+  <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="p-title">
+    <div class="dhead"><h2 id="p-title">학습 경로</h2><button class="x" id="p-close" aria-label="닫기">×</button></div>
+    <p id="p-desc">AI의 흐름을 시간순으로 따라갑니다. 제목을 누르면 연표의 그 위치로 이동하고, 체크하면 학습 완료로 표시됩니다.</p>
+    <div class="pfilters">
+      <select id="p-track" aria-label="분야"></select>
+      <select id="p-state" aria-label="상태"><option value="all">전체</option><option value="todo">미학습만</option><option value="done">학습 완료만</option></select>
+      <input id="p-q" type="search" placeholder="목록에서 찾기" aria-label="목록 검색">
+    </div>
+    <ul class="plist" id="p-list"></ul>
+  </div>
+</div>
+
+<div class="modal" id="cardm" hidden>
+  <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="c-title">
+    <div class="dhead"><h2 id="c-title">카드 복습</h2><button class="x" id="c-close" aria-label="닫기">×</button></div>
+    <p id="c-desc"></p>
+    <div class="card" id="c-card"></div>
+    <div class="mrow" id="c-acts"></div>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+const KEY = 'ai-learning-chart-v1';
+const PALETTE = ['#4d5fb0','#2f8f7a','#b5473a','#d08a2e','#7a4fa3','#5f8f3e','#a64d7e','#4a5a60','#2f6f9f','#c9a92e','#8a8f9c','#26343a','#8c2f39','#3a8fb0'];
+const NOW = new Date().getFullYear();
+const NOW_F = NOW + (Date.now() - new Date(NOW, 0, 1)) / (365.25 * 864e5), NOW_END = Math.ceil(NOW_F * 10) / 10;
+const PAD = 10, STRIP = 16, EVT_H = 24, LANE_H = 34, MIN_ROW = 62, MAXL = 6;
+const MIN_SPAN = 5, MAX_SPAN = 600;
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let idc = 0;
+const uid = () => Date.now().toString(36) + (idc++).toString(36) + Math.random().toString(36).slice(2, 6);
+const hex = c => (typeof c === 'string' && /^#[0-9a-f]{6}$/i.test(c)) ? c.toLowerCase() : null;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+/* ---------- 예시 데이터: AI 발전사 ---------- */
+function sample() {
+  const tracks = [
+    { id: 'fd',  name: 'AI 기초·패러다임', color: '#4d5fb0' },
+    { id: 'ml',  name: '머신러닝',         color: '#2f8f7a' },
+    { id: 'dl',  name: '딥러닝·신경망',     color: '#b5473a' },
+    { id: 'cv',  name: '컴퓨터 비전',       color: '#d08a2e' },
+    { id: 'nlp', name: '자연어 처리·LLM',   color: '#7a4fa3' },
+    { id: 'app', name: 'LLM 앱·LLMOps',     color: '#8c2f39' },
+    { id: 'rl',  name: '강화학습',          color: '#5f8f3e' },
+    { id: 'gen', name: '생성 모델',         color: '#a64d7e' },
+    { id: 'rob', name: '로보틱스·월드 모델', color: '#3a8fb0' },
+    { id: 'inf', name: '인프라·도구',       color: '#4a5a60' },
+  ];
+  const col = Object.fromEntries(tracks.map(t => [t.id, t.color]));
+  const items = [];
+  const P = (tr, title, s, e, who, tags, note, o = {}) => items.push({ id: uid(), trackId: tr, kind: 'period', title, start: s, end: e, who, tags, note, color: o.c || col[tr], band: !!o.band, learned: false });
+  const E = (tr, title, y, who, tags, note, o = {}) => items.push({ id: uid(), trackId: tr, kind: 'event', title, start: y, end: null, who, tags, note, color: o.c || col[tr], band: false, learned: false });
+  const GRAY = '#8a8f9c';
+
+  // AI 기초·패러다임
+  P('fd','기호주의 AI 황금기',1956,1974,'매카시, 민스키, 뉴웰, 사이먼','기호주의, 탐색, GPS, 낙관론','논리와 기호 조작으로 지능을 구현하려던 시기. 일반 문제 해결기(GPS), 정리 증명기가 등장했고 "20년 안에 인간 수준 AI"라는 낙관이 퍼졌습니다.');
+  P('fd','1차 AI 겨울',1974,1980,'라이트힐 보고서(1973), DARPA','조합 폭발, 연구비 삭감','과장된 기대에 비해 성과가 부족했고, 1973년 영국 라이트힐 보고서와 미국 DARPA의 예산 삭감으로 연구 자금이 급감했습니다. 조합 폭발과 상식 추론이 큰 벽이었습니다.',{ c: GRAY, band: true });
+  P('fd','전문가 시스템 붐',1980,1987,'XCON(DEC), 일본 5세대 컴퓨터(1982)','규칙 기반, 지식 공학, 추론 엔진','"IF–THEN" 규칙으로 특정 분야 전문가의 판단을 흉내 낸 시스템. DEC의 XCON이 큰 비용 절감을 거두며 기업 투자가 몰렸습니다.',{ c: '#c9a92e' });
+  P('fd','2차 AI 겨울',1987,1993,'LISP 머신 시장 붕괴','지식 획득 병목, 유지보수 비용','전용 LISP 머신 시장이 범용 PC에 밀려 무너지고, 전문가 시스템의 유지보수 비용과 취약성이 드러나 다시 침체기를 맞았습니다. 끝나는 시점은 문헌마다 다릅니다.',{ c: GRAY, band: true });
+  P('fd','생성형 AI 대중화',2022,NOW_END,'OpenAI, Anthropic, Google, Meta 등','생성형 AI, 에이전트, 멀티모달','ChatGPT 이후 생성형 AI가 대중 제품으로 퍼진 시기. 이후 도구를 사용하며 여러 단계를 스스로 수행하는 AI 에이전트로 확장되고 있습니다.',{ c: '#7a4fa3' });
+  E('fd','튜링 테스트',1950,'앨런 튜링','모방 게임, 기계 지능','논문 「Computing Machinery and Intelligence」에서 "기계는 생각할 수 있는가?"를 대화로 판정하는 모방 게임으로 바꾸어 제안했습니다.');
+  E('fd','다트머스 회의',1956,'매카시, 민스키, 섀넌, 로체스터','Artificial Intelligence 용어, AI 학문의 출발','"Artificial Intelligence"라는 이름을 내건 여름 연구 프로젝트(제안서는 1955년). AI가 독립된 학문 분야로 출발한 지점으로 꼽힙니다.');
+  E('fd','LISP',1958,'존 매카시','기호 처리, 함수형 언어','리스트와 기호 처리를 위한 언어로, 이후 수십 년간 AI 연구의 표준 언어가 되었습니다.');
+  E('fd','딥 블루, 카스파로프 격파',1997,'IBM','게임 트리 탐색, 알파-베타 가지치기','IBM의 체스 컴퓨터가 세계 챔피언 카스파로프에게 6번기 승리. 학습보다는 대규모 탐색과 전용 하드웨어의 승리였습니다.');
+  E('fd','왓슨, 제퍼디! 우승',2011,'IBM','질의응답, 정보 검색','퀴즈 쇼 제퍼디!에서 인간 챔피언들을 이겨 자연어 질의응답 기술의 가능성을 보였습니다.');
+  E('fd','알파폴드 2',2020,'딥마인드','단백질 구조 예측, AI for Science','단백질 구조 예측 대회 CASP14에서 실험 수준에 가까운 정확도를 보여 50년 난제를 크게 진전시켰습니다.');
+  E('fd','AI 연구 노벨상',2024,'홉필드·힌턴(물리), 허사비스·점퍼·베이커(화학)','인공신경망, 단백질 구조','물리학상은 인공신경망 기초를 세운 홉필드와 힌턴, 화학상은 단백질 설계·구조 예측의 베이커, 허사비스, 점퍼에게 돌아갔습니다.');
+  E('fd','EU AI Act 발효',2024,'유럽연합','위험 기반 규제, AI 거버넌스','AI 시스템을 위험 수준별로 나누어 규제하는 세계 첫 포괄적 AI 법. 2024년 발효 후 단계적으로 적용됩니다.');
+
+  // 머신러닝
+  P('ml','통계적 머신러닝 시대',1990,2012,'바프닉, 브라이먼, 펄 등','커널 방법, 그래픽 모델, 앙상블','규칙을 사람이 쓰는 대신 데이터에서 확률·통계 모델을 학습하는 방식이 주류가 된 시기. 특징(feature)은 여전히 사람이 설계했습니다.');
+  E('ml','"머신러닝" 용어 등장',1959,'아서 새뮤얼','체커 게임, 자기 대국 학습','체커 프로그램이 스스로 대국하며 실력을 높이는 연구에서 "명시적 프로그래밍 없이 배우는 능력"이라는 머신러닝 개념을 알렸습니다.');
+  E('ml','k-최근접 이웃 이론',1967,'커버 & 하트','k-NN, 비모수 분류, 거리 기반','가장 가까운 이웃의 레이블로 분류하는 규칙의 오류율 상한을 증명해 이론적 기반을 놓았습니다(아이디어는 1951년 Fix & Hodges).');
+  E('ml','k-평균 군집',1967,'맥퀸 (로이드 1957)','비지도 학습, 군집화, 중심점','데이터를 k개 중심점으로 반복 할당·갱신하는 군집 알고리즘. 맥퀸이 이름을 붙였고 알고리즘은 로이드가 먼저 고안했습니다.');
+  E('ml','VC 이론',1971,'바프닉 & 체르보넨키스','VC 차원, 일반화 오차, 모델 용량','모델의 표현력(VC 차원)과 일반화 성능의 관계를 정리한 통계적 학습 이론의 출발점. 훗날 SVM의 이론적 뿌리가 됩니다.');
+  E('ml','CART 결정 트리',1984,'브라이먼, 프리드먼, 올셴, 스톤','지니 불순도, 분류·회귀 트리, 가지치기','데이터를 불순도가 줄어드는 방향으로 이진 분할하는 결정 트리. 이후 랜덤 포레스트와 부스팅의 기본 부품이 됩니다.');
+  E('ml','PAC 학습 이론',1984,'레슬리 밸리언트','계산 학습 이론, 샘플 복잡도','"아마도 근사적으로 맞는" 학습을 수학적으로 정의해, 학습 가능성을 계산 복잡도 관점에서 다루게 했습니다.');
+  E('ml','베이지안 네트워크',1988,'주디아 펄','확률 그래프 모델, 조건부 독립, 인과','변수 사이의 확률적 의존을 방향 그래프로 표현하는 틀. 불확실성 추론의 표준이 되었고 펄은 이후 인과 추론으로 확장했습니다.');
+  E('ml','서포트 벡터 머신',1995,'코르테스 & 바프닉','마진 최대화, 커널 트릭, 서포트 벡터','클래스 사이 간격(마진)을 최대화하고 커널 트릭으로 비선형 경계를 만드는 분류기. 2000년대 분류 문제의 표준이었습니다.');
+  E('ml','AdaBoost',1995,'프로인트 & 샤피르','부스팅, 약한 학습기, 가중치 갱신','틀린 샘플에 가중치를 높여 가며 약한 분류기를 차례로 더하는 부스팅 알고리즘. 얼굴 검출 등에 널리 쓰였습니다.');
+  E('ml','랜덤 포레스트',2001,'레오 브라이먼','배깅, 앙상블, 특징 무작위 선택','부트스트랩 표본과 무작위 특징으로 만든 여러 트리의 투표. 튜닝이 쉽고 강건해 정형 데이터의 기본 모델이 되었습니다.');
+  E('ml','그래디언트 부스팅',2001,'제롬 프리드먼','잔차 학습, 손실 함수의 경사','이전 모델의 잔차(손실의 음의 경사)를 다음 트리가 학습하도록 부스팅을 일반화했습니다.');
+  E('ml','XGBoost',2014,'천치 & 게스트린','정규화 부스팅, 병렬 트리, Kaggle','속도와 정규화를 개선한 그래디언트 부스팅 라이브러리(논문은 2016년). Kaggle 정형 데이터 대회를 휩쓸었습니다.');
+  E('ml','LightGBM',2017,'마이크로소프트','히스토그램 분할, 리프 중심 성장','히스토그램 기반 분할과 리프 중심 트리 성장으로 대용량 데이터에서 매우 빠른 부스팅을 구현했습니다.');
+
+  // 딥러닝·신경망
+  P('dl','1차 신경망 붐',1957,1969,'로젠블랫','퍼셉트론, 연결주의','퍼셉트론이 큰 기대를 받았던 시기. 단층 구조의 한계가 드러나며 막을 내립니다.',{ c: '#d08a2e' });
+  P('dl','연결주의 부활',1986,1995,'럼멜하트, 힌턴, 윌리엄스, 르쿤','역전파, 다층 퍼셉트론, PDP','역전파로 다층 신경망을 학습할 수 있게 되며 신경망 연구가 되살아난 시기. 이후 SVM 등에 밀려 다시 주춤합니다.',{ c: '#c9a92e' });
+  P('dl','딥러닝 혁명',2012,NOW_END,'힌턴, 르쿤, 벤지오 외','GPU, 대규모 데이터, 심층 신경망','AlexNet 이후 GPU와 대규모 데이터로 깊은 신경망을 학습하는 방식이 비전·음성·언어 전 분야를 바꾼 시기입니다.');
+  E('dl','맥컬럭-피츠 뉴런',1943,'맥컬럭 & 피츠','인공 뉴런, 임계값 논리','뉴런을 입력의 가중합이 임계값을 넘으면 발화하는 논리 소자로 모델링한 최초의 인공 뉴런 수학 모형입니다.');
+  E('dl','헵 학습 규칙',1949,'도널드 헵','시냅스 가소성, 함께 발화하면 연결 강화','"함께 발화하는 뉴런은 서로 연결된다." 연결 강도가 경험으로 바뀐다는 생각으로 학습 규칙의 원형이 되었습니다.');
+  E('dl','퍼셉트론',1958,'프랭크 로젠블랫','선형 분류기, 가중치 학습 규칙','오차에 따라 가중치를 조정하는 학습 가능한 최초의 신경망. 선형 분리 가능한 문제는 수렴이 보장됩니다.');
+  E('dl','『Perceptrons』 출간',1969,'민스키 & 페퍼트','XOR 문제, 선형 분리 한계','단층 퍼셉트론이 XOR 같은 비선형 문제를 풀 수 없음을 수학적으로 보여, 신경망 연구가 침체되는 계기가 되었습니다.');
+  E('dl','역전파의 수학적 기원',1970,'린나인마, 워보스(1974)','자동 미분, 역방향 모드, 연쇄 법칙','린나인마가 자동 미분의 역방향 모드를 정리했고, 워보스가 1974년 박사 논문에서 신경망 학습에 쓰자고 제안했습니다.');
+  E('dl','홉필드 네트워크',1982,'존 홉필드','연상 기억, 에너지 함수, 순환망','에너지 함수가 줄어드는 방향으로 상태가 수렴하는 순환 신경망. 저장된 패턴을 떠올리는 연상 기억 모델입니다.');
+  E('dl','역전파 대중화',1986,'럼멜하트, 힌턴, 윌리엄스','오차 역전파, 은닉층 표현 학습','Nature 논문으로 다층 신경망이 역전파로 유용한 내부 표현을 학습할 수 있음을 보여 연결주의 부활을 이끌었습니다.');
+  E('dl','만능 근사 정리',1989,'조지 시벤코','은닉층 하나, 연속 함수 근사','시그모이드 은닉층 하나로도 충분한 뉴런이 있으면 임의의 연속 함수를 근사할 수 있음을 증명했습니다.');
+  E('dl','LSTM',1997,'호흐라이터 & 슈미트후버','게이트, 셀 상태, 기울기 소실 해결','게이트로 정보를 기억·망각하는 순환 신경망. 긴 시퀀스에서 기울기 소실을 완화해 음성·번역의 핵심이 되었습니다.');
+  E('dl','심층 신뢰망(DBN)',2006,'힌턴, 오신데로, 테','층별 사전학습, RBM, "딥러닝" 재점화','RBM을 한 층씩 사전학습해 깊은 망을 학습하는 방법. "딥러닝"이라는 이름으로 신경망 연구를 다시 불붙였습니다.');
+  E('dl','ReLU 활성화',2010,'네어 & 힌턴','max(0,x), 기울기 소실 완화','음수는 0, 양수는 그대로 통과시키는 단순한 함수로 깊은 망 학습을 크게 쉽게 만들었습니다.');
+  E('dl','드롭아웃',2012,'힌턴, 스리바스타바 외','정규화, 과적합 방지, 앙상블 효과','학습 중 뉴런을 무작위로 끄는 정규화 기법(JMLR 정식 논문 2014). 여러 망을 앙상블하는 효과를 냅니다.');
+  E('dl','Adam 옵티마이저',2014,'킹마 & 바','적응적 학습률, 모멘텀, 1·2차 모먼트','기울기의 1차·2차 모먼트를 추정해 파라미터마다 학습률을 조정하는 최적화 기법. 사실상 기본 옵티마이저가 되었습니다.');
+  E('dl','배치 정규화',2015,'아이오페 & 세게디','내부 공변량 변화, 학습 안정화','미니배치 단위로 층 입력을 정규화해 학습을 빠르고 안정적으로 만들었습니다.');
+  E('dl','혼합 전문가(MoE)',2017,'샤지어 외 (구글)','희소 게이팅, 조건부 연산','입력마다 일부 전문가 망만 활성화해 연산량은 유지하면서 파라미터 수를 크게 늘리는 구조. 대형 LLM에 널리 쓰입니다.');
+  E('dl','딥러닝 3인 튜링상',2018,'힌턴, 르쿤, 벤지오','딥러닝 개척, 컴퓨터 과학의 노벨상','딥러닝을 컴퓨팅의 핵심으로 만든 공로로 2018년도 튜링상을 받았습니다(발표는 2019년 3월).');
+
+  // 컴퓨터 비전
+  P('cv','특징 공학 시대',1999,2012,'로우, 비올라 & 존스, 달랄 & 트릭스','SIFT, HOG, 수작업 특징 + 분류기','사람이 설계한 특징(SIFT, HOG 등)을 뽑고 SVM 같은 분류기를 붙이는 방식이 주류였던 시기입니다.',{ c: '#c9a92e' });
+  P('cv','CNN 전성기',2012,2020,'크리제프스키, 허카이밍 외','합성곱 신경망, 전이 학습, ImageNet','합성곱 신경망이 분류·검출·분할의 표준이 된 시기. ImageNet 사전학습 후 전이 학습이 기본 방법이었습니다.');
+  P('cv','비전 트랜스포머·멀티모달',2020,NOW_END,'구글, OpenAI, 메타','ViT, CLIP, 이미지-텍스트 정렬','이미지를 패치 토큰으로 다루는 트랜스포머와 이미지-텍스트를 함께 학습하는 멀티모달 모델이 주류가 되었습니다.',{ c: '#b5473a' });
+  E('cv','네오코그니트론',1980,'후쿠시마 구니히코','계층적 특징, 합성곱의 원형','시각 피질에서 영감을 받은 계층형 신경망으로, CNN의 합성곱·풀링 구조의 선구자입니다.');
+  E('cv','LeNet',1989,'얀 르쿤','CNN, 우편번호 인식, 역전파','역전파로 학습한 합성곱 신경망으로 손글씨 우편번호를 인식했습니다. 1998년 LeNet-5는 수표 인식에 실제로 쓰였습니다.');
+  E('cv','MNIST 데이터셋',1998,'르쿤, 코르테스, 버지스','손글씨 숫자, 벤치마크','28×28 손글씨 숫자 7만 장. 머신러닝 입문의 "Hello, World"가 된 데이터셋입니다.');
+  E('cv','SIFT',1999,'데이비드 로우','크기·회전 불변 특징점, 기술자','크기와 회전에 강인한 지역 특징점을 찾고 기술하는 방법. 이미지 정합·파노라마·물체 인식의 표준이었습니다.');
+  E('cv','비올라-존스 얼굴 검출',2001,'비올라 & 존스','하르 특징, 적분 영상, 캐스케이드','적분 영상과 AdaBoost 캐스케이드로 실시간 얼굴 검출을 구현해 디지털카메라에 탑재되었습니다.');
+  E('cv','HOG',2005,'달랄 & 트릭스','기울기 방향 히스토그램, 보행자 검출','영상의 기울기 방향 분포로 형태를 표현하는 특징. 선형 SVM과 함께 보행자 검출의 표준이 되었습니다.');
+  E('cv','ImageNet 데이터셋',2009,'페이페이 리','대규모 레이블, 2만여 범주, ILSVRC','1,400만 장 이상의 이미지를 범주별로 레이블한 데이터셋. 2010년부터 열린 ILSVRC 대회가 딥러닝 혁명의 무대가 되었습니다.');
+  E('cv','AlexNet',2012,'크리제프스키, 서츠케버, 힌턴','GPU 학습, ReLU, 드롭아웃, ILSVRC 2012','ILSVRC 2012에서 top-5 오류율 15.3%로 2위(26.2%)를 크게 앞서며 딥러닝 시대를 열었습니다.');
+  E('cv','VGGNet·GoogLeNet',2014,'옥스퍼드 VGG, 구글','3×3 합성곱 적층, 인셉션 모듈','작은 필터를 깊게 쌓은 VGG와 여러 크기 필터를 병렬로 쓰는 인셉션 구조가 "깊이"의 중요성을 보였습니다.');
+  E('cv','ResNet',2015,'허카이밍 외 (MSRA)','잔차 연결, 152층, 항등 지름길','입력을 출력에 더하는 잔차 연결로 100층이 넘는 망을 학습 가능하게 했습니다. ILSVRC 2015 우승(top-5 3.57%).');
+  E('cv','U-Net',2015,'론네베르거 외','인코더-디코더, 스킵 연결, 의료 영상 분할','대칭형 인코더-디코더에 스킵 연결을 더한 분할 모델. 의료 영상에서 시작해 확산 모델의 기본 골격이 되었습니다.');
+  E('cv','YOLO',2015,'레드먼 외','단일 단계 검출, 실시간','이미지를 한 번만 보고 격자별로 상자와 클래스를 동시에 예측하는 실시간 객체 검출기(CVPR 2016).');
+  E('cv','Mask R-CNN',2017,'허카이밍 외 (FAIR)','인스턴스 분할, RoIAlign','Faster R-CNN에 마스크 예측 분기를 더해 객체 검출과 인스턴스 분할을 함께 수행합니다.');
+  E('cv','Vision Transformer (ViT)',2020,'도소비츠키 외 (구글)','이미지 패치, 자기 어텐션','이미지를 16×16 패치 토큰으로 나눠 트랜스포머에 넣는 방식. 충분한 데이터에서는 CNN을 능가함을 보였습니다.');
+  E('cv','CLIP',2021,'OpenAI','대조 학습, 제로샷 분류, 이미지-텍스트 임베딩','4억 쌍의 이미지-텍스트로 두 인코더를 대조 학습해, 텍스트 설명만으로 분류하는 제로샷 능력을 보였습니다.');
+  E('cv','Segment Anything (SAM)',2023,'메타','프롬프트 분할, 파운데이션 모델','점이나 상자 프롬프트로 어떤 물체든 분할하는 비전 파운데이션 모델과 10억 개 이상 마스크 데이터셋을 공개했습니다.');
+
+  // 자연어 처리·LLM
+  P('nlp','규칙 기반 NLP',1960,1990,'와이젠바움, 촘스키 학파','문법 규칙, 패턴 매칭','사람이 쓴 문법·패턴 규칙으로 언어를 처리하던 시기입니다.',{ c: GRAY });
+  P('nlp','통계적 NLP',1990,2013,'IBM, 젤리넥 외','n-gram, HMM, 통계적 기계번역','말뭉치에서 확률을 추정하는 n-gram 언어모델, HMM, 통계적 번역이 주류였던 시기입니다.',{ c: '#2f6f9f' });
+  P('nlp','신경망 NLP (RNN·LSTM)',2013,2017,'미콜로프, 서츠케버, 조경현','단어 임베딩, seq2seq, 어텐션','단어 임베딩과 순환 신경망 기반 인코더-디코더가 번역·요약을 이끈 시기입니다.',{ c: '#a64d7e' });
+  P('nlp','트랜스포머·LLM 시대',2017,NOW_END,'구글, OpenAI, Anthropic, 메타 외','사전학습, 스케일링, 지시 따르기','트랜스포머를 대규모 텍스트로 사전학습한 뒤 미세조정·정렬하는 방식이 NLP 전체를 대체한 시기입니다.');
+  E('nlp','ELIZA',1966,'조지프 와이젠바움','패턴 매칭 챗봇, 엘리자 효과','심리 상담사를 흉내 낸 패턴 매칭 챗봇. 단순한 규칙에도 사람들이 이해받는다고 느끼는 "엘리자 효과"를 남겼습니다.');
+  E('nlp','IBM 통계적 기계번역',1990,'브라운, 젤리넥 외 (IBM)','병렬 말뭉치, 정렬 모델, 잡음 채널','캐나다 의회의 영-불 병렬 말뭉치로 번역 확률을 학습한 접근. 규칙 기반 번역을 통계 방식으로 전환시켰습니다.');
+  E('nlp','신경 확률 언어모델',2003,'요슈아 벤지오 외','분산 표현, 단어 임베딩의 원형','단어를 연속 벡터로 표현하고 신경망으로 다음 단어 확률을 예측한 모델. 임베딩과 신경 언어모델의 출발점입니다.');
+  E('nlp','word2vec',2013,'토마스 미콜로프 외 (구글)','Skip-gram, CBOW, 단어 벡터 연산','대량 텍스트에서 빠르게 단어 벡터를 학습하는 방법. "왕 − 남자 + 여자 ≈ 여왕" 같은 의미 연산으로 유명합니다.');
+  E('nlp','Seq2Seq',2014,'서츠케버, 비냘스, 르','인코더-디코더, LSTM 번역','입력 문장을 LSTM으로 벡터에 담고 다른 LSTM으로 출력 문장을 생성하는 구조로 신경망 번역을 열었습니다.');
+  E('nlp','어텐션 메커니즘',2014,'바다나우, 조경현, 벤지오','정렬 학습, 가중합 문맥 벡터','디코더가 매 단계 입력의 어느 부분에 집중할지 학습하도록 해 긴 문장 번역의 병목을 풀었습니다(ICLR 2015).');
+  E('nlp','Transformer',2017,'바스와니 외 (구글)','자기 어텐션, 멀티헤드, 위치 인코딩','논문 「Attention Is All You Need」. 순환 구조 없이 어텐션만으로 병렬 학습이 가능해져 이후 모든 LLM의 기반이 되었습니다.');
+  E('nlp','GPT-1',2018,'OpenAI','생성적 사전학습, 디코더 전용','대량 텍스트로 다음 토큰 예측을 사전학습한 뒤 과제별로 미세조정하는 방식을 제시했습니다.');
+  E('nlp','BERT',2018,'구글','양방향 인코더, 마스크 언어모델','가려진 단어를 양쪽 문맥으로 맞히는 사전학습으로 11개 NLP 과제의 최고 성능을 갱신했습니다.');
+  E('nlp','GPT-2',2019,'OpenAI','15억 파라미터, 제로샷 과제 수행','규모를 키운 언어모델이 별도 학습 없이도 여러 과제를 수행함을 보였고, 오용 우려로 단계적으로 공개되었습니다.');
+  E('nlp','스케일링 법칙',2020,'카플란 외 (OpenAI)','멱법칙, 파라미터·데이터·연산량','언어모델의 손실이 모델 크기, 데이터, 연산량에 대해 멱법칙으로 줄어든다는 관찰. 대형화 경쟁의 근거가 되었습니다.');
+  E('nlp','GPT-3',2020,'OpenAI','1,750억 파라미터, 인컨텍스트 학습, 퓨샷','프롬프트 안의 몇 가지 예시만으로 새 과제를 수행하는 인컨텍스트 학습 능력을 보였습니다.');
+  E('nlp','RAG (검색 증강 생성)',2020,'루이스 외 (메타)','외부 지식 검색, 환각 감소','질문과 관련된 문서를 검색해 생성에 함께 넣는 방식. 최신 정보와 근거 제시가 필요한 LLM 서비스의 기본 패턴입니다.');
+  E('nlp','사고의 사슬(CoT)',2022,'웨이 외 (구글)','단계적 추론, 프롬프팅','"단계별로 생각"하는 중간 추론을 예시로 보여주면 수학·논리 문제 성능이 크게 오른다는 것을 보였습니다.');
+  E('nlp','ChatGPT',2022,'OpenAI','대화형 LLM, RLHF, 대중화','대화형 인터페이스로 공개되어 역사상 가장 빠르게 확산된 소비자 서비스 중 하나가 되었습니다.');
+  E('nlp','GPT-4',2023,'OpenAI','멀티모달 입력, 전문 시험 성능','이미지 입력을 받는 대형 모델로, 여러 전문 자격 시험에서 상위권 성적을 보였습니다.');
+  E('nlp','LLaMA',2023,'메타','오픈 웨이트, 효율적 학습','비교적 작은 크기로 높은 성능을 낸 모델 가중치를 연구용으로 공개해 오픈 LLM 생태계를 폭발시켰습니다.');
+  E('nlp','Claude',2023,'Anthropic','헌법적 AI, 무해성·유용성','원칙 목록(헌법)으로 모델 스스로 응답을 평가·수정하게 하는 Constitutional AI 기법으로 학습한 어시스턴트입니다.');
+  E('nlp','추론 모델 (o1)',2024,'OpenAI','테스트 시점 연산, 긴 사고 과정','답하기 전에 긴 내부 추론을 거치도록 강화학습한 모델. "추론에 연산을 더 쓰면 성능이 오른다"는 축을 열었습니다.');
+  E('nlp','DeepSeek-R1',2025,'딥시크','순수 RL 추론, 오픈 웨이트, 증류','강화학습만으로 추론 능력을 끌어낸 과정을 공개하고 가중치를 풀어 추론 모델 경쟁을 가속했습니다.');
+
+  // 강화학습
+  P('rl','고전 강화학습 이론',1988,2012,'서튼, 바르토, 왓킨스','TD, Q-러닝, 정책 경사','보상 신호로부터 가치 함수를 학습하는 이론과 알고리즘이 정리된 시기입니다.',{ c: '#2f8f7a' });
+  P('rl','심층 강화학습 시대',2013,2020,'딥마인드, OpenAI','DQN, 정책 경사, 자기 대국','신경망을 가치·정책 함수 근사기로 써서 게임과 로봇 제어에서 초인적 성능을 보인 시기입니다.');
+  P('rl','RLHF·추론 RL',2022,NOW_END,'OpenAI, Anthropic, 딥시크 등','인간 피드백, 보상 모델, 검증 가능한 보상','강화학습이 LLM을 정렬하고 추론 능력을 키우는 핵심 도구로 자리 잡은 시기입니다.',{ c: '#7a4fa3' });
+  E('rl','벨만 방정식',1957,'리처드 벨만','동적 계획법, 최적성 원리, MDP','최적 가치를 현재 보상과 다음 상태 가치의 재귀식으로 표현한 동적 계획법. 모든 강화학습의 수학적 뼈대입니다.');
+  E('rl','TD 학습',1988,'리처드 서튼','시간차 오차, 부트스트래핑','최종 결과를 기다리지 않고 다음 예측과의 차이로 가치를 갱신하는 시간차 학습을 정식화했습니다.');
+  E('rl','Q-러닝',1989,'크리스 왓킨스','오프폴리시, 행동 가치 함수','환경 모델 없이 상태-행동 가치 Q를 학습하는 오프폴리시 알고리즘. 최적 정책으로의 수렴이 증명되었습니다.');
+  E('rl','TD-Gammon',1992,'제럴드 테사우로 (IBM)','자기 대국, 신경망 가치 함수','신경망과 TD 학습으로 스스로 대국하며 세계 정상급 백개먼 실력에 도달했습니다.');
+  E('rl','서튼 & 바르토 교과서',1998,'서튼 & 바르토','『Reinforcement Learning: An Introduction』','강화학습 분야를 체계화한 표준 교과서(2판 2018). 두 저자는 2024년도 튜링상을 받았습니다.');
+  E('rl','DQN, 아타리 게임',2013,'딥마인드','경험 재생, 타깃 네트워크, 픽셀 입력','화면 픽셀만 보고 아타리 게임을 학습한 심층 Q-네트워크(Nature 2015). 심층 강화학습의 시작입니다.');
+  E('rl','알파고, 이세돌 9단에 승리',2016,'딥마인드','몬테카를로 트리 탐색, 정책·가치망','정책망·가치망과 트리 탐색을 결합해 이세돌 9단을 4:1로 이겼습니다. 바둑은 AI가 정복하기 어려운 게임으로 꼽혀 왔습니다.');
+  E('rl','PPO',2017,'슐만 외 (OpenAI)','클리핑된 목적 함수, 정책 경사','정책 갱신 폭을 제한해 안정적으로 학습하는 정책 경사 알고리즘. 이후 RLHF의 기본 알고리즘이 되었습니다.');
+  E('rl','알파제로',2017,'딥마인드','사전 지식 없는 자기 대국, 범용 게임','규칙만 주고 자기 대국으로 학습해 바둑·체스·쇼기 모두에서 최강 프로그램을 넘어섰습니다.');
+  E('rl','알파스타',2019,'딥마인드','실시간 전략 게임, 다중 에이전트 리그','스타크래프트 II에서 그랜드마스터 등급에 도달해 불완전 정보·실시간 환경에서의 RL 가능성을 보였습니다.');
+  E('rl','InstructGPT · RLHF',2022,'OpenAI','인간 선호 데이터, 보상 모델, PPO','사람이 응답 순위를 매긴 데이터로 보상 모델을 만들고 PPO로 언어모델을 정렬했습니다. ChatGPT의 핵심 기법입니다.');
+
+  // 생성 모델
+  P('gen','GAN 전성기',2014,2020,'굿펠로, NVIDIA 외','적대적 학습, 고해상도 이미지 합성','생성자와 판별자의 경쟁으로 사실적인 이미지를 만드는 GAN 계열이 이미지 생성을 이끈 시기입니다.');
+  P('gen','확산 모델 시대',2020,NOW_END,'호, 송양 외, Stability AI, OpenAI','노이즈 제거, 텍스트-이미지·영상','노이즈를 단계적으로 제거하며 데이터를 생성하는 확산 모델이 이미지·영상·음성 생성의 주류가 된 시기입니다.',{ c: '#d08a2e' });
+  E('gen','볼츠만 머신',1985,'애클리, 힌턴, 세이노스키','에너지 기반 모델, 확률적 뉴런','데이터의 확률 분포를 학습하는 확률적 순환 신경망. 이후 RBM과 심층 신뢰망으로 이어졌습니다.');
+  E('gen','VAE',2013,'킹마 & 웰링','잠재 변수, 재매개변수화 트릭, ELBO','인코더가 잠재 분포를 추정하고 디코더가 복원하는 확률적 오토인코더. 잠재 공간에서 샘플링해 새 데이터를 만듭니다.');
+  E('gen','GAN',2014,'이언 굿펠로 외','생성자 vs 판별자, 미니맥스 게임','진짜 같은 가짜를 만드는 생성자와 이를 가려내는 판별자를 경쟁시키는 생성 모델입니다.');
+  E('gen','DCGAN',2015,'래드퍼드 외','합성곱 GAN, 안정적 학습 지침','합성곱 구조와 학습 지침으로 GAN을 안정화하고 잠재 벡터 연산의 의미를 보였습니다.');
+  E('gen','WaveNet',2016,'딥마인드','자기회귀 오디오, 팽창 합성곱','원시 음성 파형을 샘플 단위로 생성해 음성 합성 품질을 크게 끌어올렸습니다.');
+  E('gen','StyleGAN',2018,'NVIDIA','스타일 기반 생성자, 고해상도 얼굴','스타일을 층별로 주입하는 생성자로 실제와 구분하기 어려운 고해상도 얼굴을 만들었습니다.');
+  E('gen','DDPM',2020,'조너선 호 외','노이즈 제거 확산, 점진적 생성','점진적으로 노이즈를 더하는 과정을 거꾸로 학습해 고품질 이미지를 생성하는 확산 모델을 실용화했습니다.');
+  E('gen','DALL·E',2021,'OpenAI','텍스트-이미지 생성','문장 설명으로 이미지를 생성하는 모델. 2022년 DALL·E 2는 확산 모델 기반으로 품질을 크게 높였습니다.');
+  E('gen','Midjourney',2022,'미드저니','텍스트-이미지 서비스, 커뮤니티','디스코드 기반 텍스트-이미지 생성 서비스로 공개 베타를 열어 AI 이미지 생성을 대중화했습니다.');
+  E('gen','Stable Diffusion',2022,'Stability AI, LMU 콤프비스, 런웨이','잠재 확산, 오픈 모델','잠재 공간에서 확산을 수행해 일반 GPU로도 돌아가는 텍스트-이미지 모델을 공개했습니다.');
+  E('gen','Sora',2024,'OpenAI','텍스트-영상 생성, 확산 트랜스포머','텍스트로 최대 1분 길이 영상을 생성하는 확산 트랜스포머 모델을 공개했습니다.');
+
+  // 인프라·도구
+  P('inf','빅데이터 생태계',2006,2016,'아파치 재단, 야후, 버클리 AMPLab','하둡, 맵리듀스, 스파크','저렴한 서버 클러스터로 대용량 데이터를 저장·처리하는 생태계가 자리 잡아 대규모 학습 데이터의 토대가 되었습니다.',{ c: '#c9a92e' });
+  P('inf','GPU 가속 컴퓨팅',2007,NOW_END,'NVIDIA','CUDA, 병렬 연산, 텐서 코어','범용 GPU 프로그래밍이 가능해지며 신경망 학습이 수십 배 빨라졌고, 연산량이 AI 발전의 핵심 축이 되었습니다.',{ c: '#5f8f3e' });
+  E('inf','무어의 법칙',1965,'고든 무어','트랜지스터 집적도, 지수적 성장','칩의 트랜지스터 수가 일정 주기로 두 배가 된다는 관찰. 수십 년간 연산 비용 하락을 이끌었습니다.');
+  E('inf','하둡',2006,'더그 커팅 외','HDFS, 맵리듀스, 분산 처리','구글 논문(GFS, MapReduce)을 바탕으로 만든 오픈소스 분산 저장·처리 프레임워크입니다.');
+  E('inf','CUDA',2007,'NVIDIA','GPGPU, 병렬 프로그래밍 모델','GPU를 범용 연산에 쓰게 해 준 프로그래밍 플랫폼. 딥러닝 프레임워크 대부분이 그 위에서 돌아갑니다.');
+  E('inf','GPU 딥러닝 가속',2009,'라이나, 마다반, 앤드루 응','대규모 비지도 학습, GPU 70배 가속','GPU로 심층 신경망 학습을 수십 배 가속할 수 있음을 보여 GPU 딥러닝의 길을 열었습니다.');
+  E('inf','scikit-learn',2010,'INRIA 외 오픈소스 커뮤니티','fit/predict API, 파이썬 ML','일관된 fit/predict 인터페이스로 고전 머신러닝을 누구나 쓰게 만든 파이썬 라이브러리입니다.');
+  E('inf','Kaggle',2010,'앤서니 골드블룸','데이터 과학 경진대회, 공개 노트북','데이터 과학 경진대회 플랫폼. XGBoost 같은 기법이 검증·확산되는 무대가 되었습니다.');
+  E('inf','Apache Spark 1.0',2014,'마테이 자하리아 외','인메모리 분산 처리, RDD, MLlib','메모리 기반 분산 처리로 반복 연산이 많은 머신러닝을 하둡보다 훨씬 빠르게 만들었습니다.');
+  E('inf','TensorFlow',2015,'구글','계산 그래프, 대규모 배포','구글이 공개한 딥러닝 프레임워크로 연구와 대규모 서비스 배포를 함께 겨냥했습니다.');
+  E('inf','TPU 공개',2016,'구글','행렬 연산 전용 ASIC','신경망의 행렬 연산에 특화된 전용 칩. 대형 모델 학습·추론의 대안 하드웨어가 되었습니다.');
+  E('inf','PyTorch',2016,'메타 (FAIR)','동적 그래프, 즉시 실행, 파이썬다움','코드를 실행하면서 그래프를 만드는 직관적 방식으로 연구계 표준 프레임워크가 되었습니다.');
+  E('inf','Hugging Face Transformers',2019,'허깅페이스','사전학습 모델 허브, 표준 API','수많은 사전학습 트랜스포머를 몇 줄로 불러 쓰게 한 라이브러리와 모델 허브입니다.');
+  E('inf','H100 GPU',2022,'NVIDIA','호퍼 구조, 트랜스포머 엔진, FP8','트랜스포머 학습에 맞춘 FP8 연산을 갖춘 데이터센터 GPU로 LLM 학습 인프라의 표준이 되었습니다.');
+
+  /* ===== 2022–2026 최신 항목 (2026년 10월 기준) ===== */
+  // AI 기초·패러다임: 정책·법·사회
+  E('fd','미국 AI 행동계획',2025,'미국 백악관','규제 완화, AI 인프라, 수출 전략','1월 바이든 정부의 AI 안전 행정명령을 폐지하고, 7월 「Winning the Race: America\'s AI Action Plan」과 행정명령 3건을 발표해 규제 완화와 인프라 확대로 방향을 틀었습니다.');
+  E('fd','AI 학습과 저작권 판결',2025,'Bartz v. Anthropic, Getty v. Stability AI','공정 이용, 해적판 데이터, 합의금','6월 미국 법원은 합법적으로 구한 책으로 학습한 것은 공정 이용이지만 해적판 보관은 아니라고 판단했고, 9월 최소 15억 달러 합의로 이어졌습니다. 11월 영국 법원은 Getty의 2차 침해 주장을 기각했습니다.');
+  E('fd','캘리포니아 SB 53',2025,'캘리포니아주','프런티어 AI, 재앙적 위험, 투명성','9월 서명된 법으로, 프런티어 AI 개발사에 안전 프레임워크 공개와 중대 사고 보고를 요구합니다. 재앙적 위험을 다룬 미국 최초의 법입니다.');
+  E('fd','한국 AI 기본법 시행',2026,'과학기술정보통신부','고영향 AI, 생성형 AI 표시, 투명성 의무','2026년 1월 22일 시행된 「인공지능 발전과 신뢰 기반 조성 등에 관한 기본법」. 고영향 AI 관리, 생성형 AI 결과물 표시 등을 규정하며, 포괄적 AI 법을 전면 시행한 첫 사례로 주목받았습니다.');
+  E('fd','EU AI 옴니버스 합의',2026,'EU 이사회·유럽의회','고위험 AI 의무 연기, 규제 간소화','5월 잠정 합의로 독립형 고위험 AI 의무는 2027년 12월, 제품 내장형은 2028년 8월로 미뤄졌습니다. 범용 AI 모델 의무는 2025년 8월부터 이미 적용 중입니다.');
+  E('fd','프런티어 모델 정부 통제',2026,'미국 정부, Anthropic, OpenAI','수출 통제, 사이버 역량, 접근 제한','6월 미 상무부가 사이버 역량을 이유로 Claude Fable 5·Mythos 5 접근을 중단시켰다가 6월 30일 해제했고, GPT-5.6도 정부 승인 기업에만 먼저 공개됐습니다. 강력한 모델 배포에 정부가 직접 개입한 첫 사례입니다.');
+
+  // 머신러닝
+  E('ml','TabPFN v2',2025,'홀만 외 (프라이부르크대)','표 데이터 파운데이션 모델, 인컨텍스트 학습','합성 데이터로 사전학습한 트랜스포머가 작은 표 데이터에서 학습 없이 바로 예측해, 튜닝한 부스팅 모델과 맞먹는 성능을 보였습니다(Nature, 2025년 1월).');
+  E('ml','AlphaEvolve',2025,'구글 딥마인드','LLM + 진화적 탐색, 알고리즘 발견','LLM이 코드를 제안하고 자동 평가로 진화시키는 시스템. 4×4 복소 행렬 곱셈을 48번 곱셈으로 줄여 56년 만에 슈트라센 알고리즘을 개선했습니다.');
+
+  // 딥러닝·신경망
+  E('dl','Mamba (선택적 상태공간 모델)',2023,'구 & 다오','SSM, 선형 시간 시퀀스 모델링','입력에 따라 상태를 선택적으로 갱신하는 상태공간 모델. 긴 시퀀스에서 트랜스포머보다 효율적인 대안으로 주목받아 하이브리드 구조로 쓰입니다.');
+  E('dl','KAN',2024,'류 외 (MIT)','콜모고로프-아놀드 표현, 학습 가능한 활성화','고정된 활성화 대신 간선마다 학습 가능한 함수를 두는 신경망 구조로, 해석 가능성 측면에서 화제가 되었습니다.');
+
+  // 컴퓨터 비전
+  E('cv','SAM 2',2024,'메타','영상 분할, 메모리 어텐션','이미지와 영상을 하나의 모델로 분할하고, 메모리로 프레임 사이에서 물체를 추적합니다.');
+
+  // 자연어 처리·LLM
+  P('nlp','추론·에이전트 모델 시대',2024,NOW_END,'OpenAI, Anthropic, 구글, 딥시크 외','테스트 시점 연산, 도구 사용, 장기 작업','답하기 전에 길게 생각하는 추론 모델과, 도구를 쓰며 여러 단계 작업을 스스로 수행하는 에이전트가 경쟁의 중심이 된 시기입니다.',{ c: '#4d5fb0' });
+  E('nlp','Claude 3 · GPT-4o',2024,'Anthropic, OpenAI','멀티모달, 실시간 음성 대화','3월 Claude 3 제품군, 5월 텍스트·음성·이미지를 하나의 모델로 처리하는 GPT-4o가 나오며 멀티모달 경쟁이 본격화되었습니다.');
+  E('nlp','컴퓨터 사용 에이전트',2024,'Anthropic, OpenAI','화면 인식, 클릭·입력 자동화','2024년 10월 Claude의 컴퓨터 사용 기능, 2025년 1월 OpenAI Operator가 나오며 AI가 사람처럼 화면을 보고 웹과 앱을 조작하기 시작했습니다.');
+  E('nlp','Deep Research',2025,'OpenAI, 구글 외','자율 웹 조사, 장문 보고서','수십 개 웹페이지를 스스로 검색·열람해 출처가 달린 보고서를 쓰는 연구 에이전트. 2025년 2월 이후 주요 서비스의 표준 기능이 되었습니다.');
+  E('nlp','Qwen3 · Llama 4',2025,'알리바바, 메타','오픈 웨이트, MoE, 하이브리드 사고','4월 알리바바는 생각 모드를 켜고 끄는 Qwen3를, 메타는 MoE 구조의 Llama 4를 공개했습니다. Llama 4가 기대에 못 미치며 오픈 모델의 주도권이 중국 쪽으로 기울었습니다.');
+  E('nlp','Claude 4',2025,'Anthropic','장시간 에이전트 작업, 코딩','5월 Claude Opus 4와 Sonnet 4 공개. 몇 시간 이어지는 코딩·에이전트 작업에 초점을 맞췄습니다.');
+  E('nlp','Kimi K2 · gpt-oss',2025,'문샷 AI, OpenAI','1조 파라미터 MoE, 오픈 웨이트','7월 문샷의 1조 파라미터 오픈 모델 Kimi K2, 8월 OpenAI가 GPT-2 이후 처음으로 가중치를 공개한 gpt-oss가 나왔습니다.');
+  E('nlp','GPT-5',2025,'OpenAI','빠른 모델 + 추론 모델 자동 전환','8월 공개. 질문에 따라 빠른 응답과 깊은 추론을 자동으로 고르는 통합 시스템이었지만 출시 반응이 엇갈려 GPT-4o가 일시 복귀했습니다.');
+  E('nlp','Gemini 3',2025,'구글 딥마인드','멀티모달 추론, 에이전트 코딩','11월 Gemini 3 Pro 공개. 추론·멀티모달 벤치마크 최상위권을 기록했고, 12월 저비용 Gemini 3 Flash가 뒤따랐습니다.');
+  E('nlp','오픈 웨이트 경쟁 가속',2026,'문샷, Z.ai, 알리바바, 딥시크','중국 오픈 모델, 저비용 고성능','1–2월 Kimi K2.5, GLM-5, Qwen3.5가 잇따라 나오는 등 중국 연구소들이 프런티어에 근접한 오픈 웨이트 모델을 빠르게 공개했습니다.');
+  E('nlp','Claude Mythos Preview',2026,'Anthropic, Project Glasswing','사이버보안, 제한 공개, 제로데이 발견','4월 발표. 소프트웨어 취약점을 찾는 능력이 매우 뛰어나 일반 공개 대신 Project Glasswing 협력사에만 제공되어 주요 OS·브라우저의 취약점 수정에 쓰였습니다.');
+  E('nlp','DeepSeek V4',2026,'딥시크','1.6조 파라미터 MoE, 100만 토큰 문맥','4월 공개된 오픈 웨이트 모델. 최상위 비공개 모델에 근접한 성능을 훨씬 낮은 가격으로 제공했습니다.');
+  E('nlp','Claude Fable 5 · Mythos 5',2026,'Anthropic','Mythos 등급, 안전 장치','6월 9일 공개된 Mythos 등급 모델. 같은 모델에 생물·사이버 등 안전 장치를 더한 것이 Fable 5입니다. 미국 수출 통제로 6월 12일 중단됐다가 7월 1일 재개되었습니다.');
+  E('nlp','GPT-5.6 (Sol·Terra·Luna)',2026,'OpenAI','제한 프리뷰, 사이버 역량','6월 26일 미국 정부 요청에 따라 승인된 약 20개 기업에만 먼저 공개되었고, 7월 일반 공개로 확대되었습니다.');
+  E('nlp','GPT-6',2026,'OpenAI','Astra·Sol·Luna','9월 3일 GPT-6 Astra가 공개되었고(사이버보안 관련 요청 일부 제한), 9월 22일 Sol과 Luna가 나왔습니다.');
+  E('nlp','Gemini 4 Argon',2026,'구글 딥마인드','고급 추론, 사이버 방어자 우선 제공','9월 발표된 구글의 새 프런티어 모델. 처음에는 신뢰할 수 있는 사이버 방어 기관에 먼저 제공되었습니다.');
+
+  // 강화학습
+  E('rl','GRPO',2024,'딥시크 (DeepSeekMath)','그룹 상대 정책 최적화, 가치망 없는 RL','같은 질문에 여러 답을 샘플링해 그룹 안에서 상대적으로 보상을 비교하는 정책 최적화. 비평가(가치) 모델이 필요 없어 추론 모델 RL의 표준이 되었습니다.');
+  E('rl','서튼·바르토 튜링상',2025,'리처드 서튼, 앤드루 바르토','강화학습 개념·알고리즘 정립','강화학습의 기초를 세운 공로로 2024년도 튜링상을 받았습니다(2025년 3월 발표).');
+  E('rl','IMO 금메달 수준 달성',2025,'구글 딥마인드(Gemini Deep Think), OpenAI','수학 추론, 자연어 증명','7월 국제수학올림피아드 문제를 사람처럼 자연어 증명으로 풀어 금메달 기준 점수에 도달했습니다. 강화학습으로 키운 추론 능력의 상징적 성과입니다.');
+  E('rl','ICPC 월드 파이널 전 문제 해결',2025,'OpenAI, 구글 딥마인드','경쟁 프로그래밍, 추론','9월 대학생 프로그래밍 대회 ICPC 월드 파이널에서 OpenAI 시스템이 12문제를 모두 풀었고 Gemini 2.5는 2위 수준을 기록했습니다.');
+
+  // 생성 모델
+  E('gen','네이티브 이미지 생성 (GPT-4o)',2025,'OpenAI','멀티모달 생성, 지브리 열풍','3월 GPT-4o가 DALL·E를 대신해 대화 속에서 직접 이미지를 생성하기 시작했고, 지브리풍 이미지가 전 세계적으로 유행했습니다.');
+  E('gen','Veo 3',2025,'구글 딥마인드','텍스트-영상, 동기화된 소리','5월 공개. 영상과 대사·효과음을 함께 생성해 소리 있는 AI 영상 시대를 열었습니다.');
+  E('gen','Nano Banana',2025,'구글 딥마인드','이미지 편집, 인물 일관성','8월 공개된 Gemini 2.5 Flash Image. 자연어로 사진을 정교하게 편집하며 인물 일관성을 유지해 큰 인기를 끌었고, 11월 Pro 버전이 나왔습니다.');
+  E('gen','Sora 2',2025,'OpenAI','영상·소리 생성, 생성 영상 SNS','9월 공개된 영상 모델과 생성 영상 공유 앱. 저작권 캐릭터 사용 논란으로 며칠 만에 옵트인 방식으로 바뀌었습니다.');
+  E('gen','음악 생성 AI 저작권 합의',2025,'UMG, 워너뮤직, Suno, Udio','라이선스, 음악 생성','10–11월 대형 음반사들이 Udio·Suno와 소송 대신 라이선스 합의를 맺으며 생성 AI와 저작권의 공존 모델이 나타났습니다.');
+  E('gen','Sora 앱 서비스 종료',2026,'OpenAI','서비스 정리, 영상 생성 경쟁','2026년 봄 OpenAI가 Sora 앱을 종료했고 API도 순차 종료 예정으로 알려졌습니다. 영상 생성 경쟁은 Veo, Kling, Seedance 등으로 옮겨 갔습니다.');
+
+  // 로보틱스·월드 모델
+  P('rob','VLA·로봇 파운데이션 모델',2023,NOW_END,'구글 딥마인드, NVIDIA, Figure 외','비전-언어-행동, 휴머노이드, 피지컬 AI','언어모델의 지식을 로봇 행동으로 연결하는 비전-언어-행동(VLA) 모델과 범용 휴머노이드가 빠르게 발전하는 시기입니다.');
+  E('rob','Shakey 로봇',1966,'SRI 인터내셔널','계획(STRIPS), A* 탐색, 이동 로봇','스스로 주변을 인식하고 행동을 계획한 최초의 범용 이동 로봇(1966–1972). 이 프로젝트에서 A* 탐색 알고리즘이 나왔습니다.');
+  E('rob','DARPA 그랜드 챌린지',2005,'스탠퍼드 (Stanley)','자율주행, 확률적 로보틱스','사막 212km 무인 주행 대회에서 스탠퍼드의 Stanley가 우승해 자율주행 연구의 기폭제가 되었습니다.');
+  E('rob','World Models 논문',2018,'하 & 슈미트후버','잠재 공간 시뮬레이션, 꿈속 학습','환경을 압축한 내부 모델 안에서 에이전트가 "꿈꾸며" 학습할 수 있음을 보여 월드 모델 연구를 대중화했습니다.');
+  E('rob','Waymo 완전 무인 로보택시',2020,'Waymo','안전 요원 없는 자율주행 상용화','피닉스에서 운전석에 사람이 없는 로보택시를 일반인에게 개방했습니다.');
+  E('rob','RT-2',2023,'구글 딥마인드','VLA, 웹 지식의 로봇 전이','웹 데이터로 학습한 비전-언어 모델이 로봇 행동 토큰까지 출력하게 해, 처음 보는 지시도 수행하는 VLA 모델의 출발점이 되었습니다.');
+  E('rob','GR00T N1 · Gemini Robotics',2025,'NVIDIA, 구글 딥마인드','휴머노이드 파운데이션 모델, VLA','3월 NVIDIA가 휴머노이드용 오픈 파운데이션 모델 GR00T N1을, 구글이 Gemini 기반 Gemini Robotics를 공개했습니다. 9월 Gemini Robotics 1.5가 뒤따랐습니다.');
+  E('rob','Genie 3',2025,'구글 딥마인드','상호작용 월드 모델, 실시간 생성','8월 공개. 텍스트로 상호작용 가능한 3D 환경을 실시간 생성하는 월드 모델로, 에이전트 훈련장으로 주목받았습니다.');
+  E('rob','르쿤, 월드 모델 스타트업',2025,'얀 르쿤','JEPA, LLM 이후의 AI','11월 메타를 떠나 월드 모델 중심 스타트업을 세우겠다고 발표했습니다. LLM만으로는 인간 수준 지능에 이르기 어렵다는 입장을 대표합니다.');
+
+  // 인프라·도구
+  E('inf','FlashAttention',2022,'트리 다오 외','IO 인지 어텐션, 메모리 효율','GPU 메모리 계층을 고려해 어텐션을 재구성한 커널로, 긴 문맥 LLM 학습·추론의 기본 부품이 되었습니다.');
+  E('inf','Blackwell GPU',2024,'NVIDIA','B200, FP4, 랙 단위 시스템','3월 발표된 차세대 데이터센터 GPU. 랙 전체를 하나의 거대한 GPU처럼 묶는 시스템으로 확장되었습니다.');
+  E('inf','스타게이트 프로젝트',2025,'OpenAI, 소프트뱅크, 오라클, MGX','AI 데이터센터, 5,000억 달러','1월 발표된 미국 AI 인프라 합작 사업으로 최대 5,000억 달러 투자를 내걸었습니다. 대규모 연산 확보 경쟁의 상징입니다.');
+  E('inf','AI 코딩 에이전트',2025,'Anthropic, OpenAI, 구글','Claude Code, Codex, 바이브 코딩','2월 Claude Code, 5월 OpenAI Codex 등 저장소 전체를 다루는 코딩 에이전트가 등장했습니다. 그해 2월 카파시가 만든 "바이브 코딩"은 콜린스 사전 올해의 단어가 되었습니다.');
+  E('inf','NVIDIA 시가총액 5조 달러',2025,'NVIDIA','AI 반도체 수요','7월 상장사 최초 4조 달러, 10월 5조 달러를 넘으며 AI 연산 수요의 규모를 보여주었습니다. 1월 DeepSeek 충격 때는 하루 최대 낙폭도 기록했습니다.');
+
+  /* ===== LLM 앱·LLMOps ===== */
+  P('app','LLM 앱 스택 형성',2022,NOW_END,'LangChain, LlamaIndex, 벡터 DB 기업들','RAG, 에이전트 프레임워크, 관측·평가','LLM을 실제 서비스로 만들기 위한 조립 도구(프레임워크), 검색(벡터 DB), 서빙, 관측·평가 도구가 하나의 기술 스택으로 자리 잡은 시기입니다.');
+  P('app','에이전트 엔지니어링',2025,NOW_END,'Anthropic, OpenAI, 구글, LangChain','에이전트 SDK, 표준 프로토콜, 컨텍스트 엔지니어링','단순 체인을 넘어 도구를 쓰며 오래 일하는 에이전트를 설계·평가·운영하는 것이 LLM 앱 개발의 중심이 된 시기입니다.',{ c: '#4d5fb0' });
+  E('app','FAISS',2017,'메타 (FAIR)','근사 최근접 이웃 검색, 벡터 인덱스','수십억 개 벡터에서 유사한 것을 빠르게 찾는 라이브러리. 이후 RAG와 벡터 DB의 핵심 기술이 되었습니다.');
+  E('app','LoRA · QLoRA',2021,'후 외 (마이크로소프트), 데트머스 외(2023)','저랭크 어댑터, 파라미터 효율 미세조정','원래 가중치는 고정하고 작은 저랭크 행렬만 학습하는 미세조정 기법. 2023년 QLoRA는 4비트 양자화와 결합해 단일 GPU로 대형 모델 튜닝을 가능하게 했습니다.');
+  E('app','ReAct 패턴',2022,'야오 외 (프린스턴, 구글)','추론 + 행동, 도구 사용 루프','"생각 → 행동(도구 호출) → 관찰"을 반복하게 하는 프롬프트 방식. 대부분의 LLM 에이전트 구조의 출발점입니다.');
+  E('app','LangChain',2022,'해리슨 체이스','체인, 프롬프트 템플릿, 도구 통합','10월 공개된 LLM 앱 프레임워크. 모델 호출, 프롬프트, 문서 검색(RAG), 도구 호출을 부품처럼 엮게 해 ChatGPT 이후 LLM 앱 개발의 사실상 표준이 되었습니다.');
+  E('app','LlamaIndex',2022,'제리 류','데이터 연결, 인덱싱, RAG 특화','11월 "GPT Index"로 시작한 프레임워크. 문서를 읽어 청크·인덱스로 만들고 LLM이 검색하게 하는 RAG 파이프라인에 특화되어 있습니다.');
+  E('app','함수 호출(Function Calling)',2023,'OpenAI 외','구조화된 출력, 도구 호출 API','6월 OpenAI API가 모델이 JSON 형식으로 호출할 함수를 고르게 하는 기능을 넣었고, 곧 모든 주요 모델의 표준 기능이 되었습니다. 에이전트의 기본 동작 단위입니다.');
+  E('app','AutoGPT 열풍',2023,'오픈소스 커뮤니티','자율 에이전트, 목표 분해','3–4월 목표만 주면 스스로 작업을 쪼개 실행하는 자율 에이전트 실험이 깃허브에서 폭발적 인기를 얻었습니다. 당시 모델로는 안정성이 부족했지만 에이전트 개념을 대중화했습니다.');
+  E('app','벡터 데이터베이스 붐',2023,'Pinecone, Chroma, Weaviate, Milvus, pgvector','임베딩 저장, 유사도 검색, RAG','RAG 수요가 폭발하며 임베딩을 저장·검색하는 벡터 DB가 급성장했습니다. 기존 DB도 pgvector처럼 벡터 검색을 확장 기능으로 추가했습니다.');
+  E('app','llama.cpp · Ollama',2023,'게오르기 게르가노프, Ollama','로컬 LLM, 양자화(GGUF), 온디바이스','노트북 CPU에서도 LLM을 돌리는 C++ 추론 엔진과, 명령 한 줄로 모델을 내려받아 실행하는 도구가 로컬 LLM 생태계를 열었습니다.');
+  E('app','vLLM · PagedAttention',2023,'권우석 외 (UC 버클리)','KV 캐시 페이징, 연속 배칭, 고속 서빙','KV 캐시를 운영체제의 페이지처럼 관리해 GPU 메모리 낭비를 줄인 서빙 엔진. 오픈 모델 서빙의 표준이 되었습니다.');
+  E('app','LangSmith',2023,'LangChain','트레이싱, 평가, 프롬프트 관리','7월 공개된 LangChain 팀의 LLM 앱 관측·평가 플랫폼. 각 호출의 입력·출력·비용을 추적하고 데이터셋으로 회귀 평가합니다.');
+  E('app','Langfuse',2023,'마크 클링겐 외 (YC W23)','오픈소스 LLM 관측, 트레이스, 프롬프트 버전, 평가','2023년 창업한 오픈소스 LLM 엔지니어링 플랫폼. 트레이스, 토큰 비용, 지연 시간, 프롬프트 버전, 품질 평가를 셀프 호스팅으로도 쓸 수 있어 널리 퍼졌고, 2026년 1월 ClickHouse에 인수되었습니다.');
+  E('app','DSPy',2023,'오마르 카타브 외 (스탠퍼드)','프롬프트 프로그래밍, 자동 최적화','프롬프트를 손으로 고치는 대신 입출력 서명과 모듈로 프로그램을 짜고, 평가 지표에 맞춰 프롬프트를 자동 최적화하는 프레임워크입니다.');
+  E('app','LangGraph',2024,'LangChain','상태 그래프, 순환, 사람 승인, 체크포인트','1월 공개. 에이전트 흐름을 노드와 엣지의 상태 머신으로 설계해 반복·분기·중단 후 재개·사람 승인이 필요한 멀티 에이전트를 만듭니다. 2025년 10월 LangChain과 함께 1.0이 되었습니다.');
+  E('app','GraphRAG',2024,'마이크로소프트 리서치','지식 그래프, 커뮤니티 요약, 전역 질의','문서에서 개체와 관계를 뽑아 지식 그래프를 만들고 요약해, 단순 벡터 검색으로 어려운 "전체를 아우르는 질문"에 답하게 한 RAG 방식입니다.');
+  E('app','MCP (모델 컨텍스트 프로토콜)',2024,'Anthropic','도구 연결 표준, 에이전트','11월 공개. AI 모델이 외부 도구와 데이터에 연결하는 방식을 표준화한 개방형 프로토콜로, 주요 AI 기업들이 채택했습니다. 2025년 12월 Linux Foundation 산하 Agentic AI Foundation에 기증되었습니다.');
+  E('app','에이전트 SDK 경쟁',2025,'OpenAI, 구글, Anthropic','Agents SDK, ADK, Claude Agent SDK','3월 OpenAI Agents SDK, 4월 구글 ADK, 9월 Claude Agent SDK가 나오며 모델 회사들이 직접 에이전트 개발 도구를 내놓았습니다.');
+  E('app','A2A 프로토콜',2025,'구글','에이전트 간 통신, 상호운용성','4월 발표. 서로 다른 회사·프레임워크로 만든 에이전트끼리 작업을 주고받는 통신 규약으로, 도구 연결용 MCP와 짝을 이룹니다.');
+  E('app','Agent Skills',2025,'Anthropic','절차 지식 패키지, 점진적 로딩','10월 공개. 지시문·스크립트·자료를 폴더 단위로 묶어 에이전트가 필요할 때만 불러 쓰게 하는 방식으로, 컨텍스트를 아끼며 전문 작업을 맡깁니다.');
+  E('app','LangChain · LangGraph 1.0',2025,'LangChain','안정 API, 프로덕션 에이전트','10월 두 프레임워크가 1.0에 도달했습니다. LangChain은 LangGraph 위에서 동작하는 에이전트 중심 구조로 재편되었습니다.');
+  E('app','Agentic AI Foundation',2025,'Linux Foundation (MCP, AGENTS.md, goose)','중립 거버넌스, 에이전트 표준','12월 Linux Foundation이 설립. Anthropic의 MCP, OpenAI의 AGENTS.md, Block의 goose가 창립 프로젝트로 기증되어 에이전트 표준을 중립 재단이 관리하게 되었습니다.');
+
+  /* ===== 핵심 개념 보강 (2022 이전) ===== */
+  E('fd','중국어 방 논증',1980,'존 설','강한 AI 비판, 이해 vs 기호 조작','규칙대로 기호만 조작하는 시스템은 의미를 이해하지 못한다는 사고 실험. "LLM은 정말 이해하는가" 논쟁에서 지금도 인용됩니다.');
+  E('fd','블레츨리 AI 안전 정상회의',2023,'영국 정부, 28개국','프런티어 AI 위험, 국제 협력','11월 영국에서 열린 첫 AI 안전 정상회의. 프런티어 AI 위험에 대한 블레츨리 선언이 나왔고, 이후 각국 AI 안전 연구소 설립으로 이어졌습니다.');
+  E('ml','은닉 마르코프 모델(HMM)',1966,'바움 & 페트리','숨은 상태, 전이 확률, 비터비','관측 뒤에 숨은 상태열을 확률로 모델링하는 방법. 1980–2000년대 음성 인식과 품사 태깅의 핵심이었습니다.');
+  E('ml','EM 알고리즘',1977,'뎀스터, 레어드, 루빈','잠재 변수, 최대우도, 기대-최대화','잠재 변수가 있는 모델의 파라미터를 E단계(기대값 계산)와 M단계(최대화)를 반복해 추정합니다. 가우시안 혼합 모델, HMM 학습에 쓰입니다.');
+  E('ml','Lasso 회귀',1996,'로버트 팁시라니','L1 정규화, 희소성, 변수 선택','계수 절댓값 합에 벌점을 줘 일부 계수를 정확히 0으로 만드는 회귀. 정규화와 변수 선택을 동시에 합니다.');
+  E('ml','t-SNE',2008,'반 데르 마텐 & 힌턴','고차원 시각화, 비선형 차원 축소','고차원 데이터의 이웃 관계를 보존하며 2·3차원으로 펼쳐 군집 구조를 눈으로 보게 하는 방법입니다(UMAP은 2018년).');
+  E('ml','SHAP',2017,'런드버그 & 리','설명 가능한 AI, 샤플리 값','게임 이론의 샤플리 값으로 각 특징이 예측에 기여한 정도를 계산하는 모델 설명 기법. 트리 모델 해석의 표준입니다.');
+  E('dl','GRU',2014,'조경현 외','게이트 순환 유닛, LSTM 경량화','LSTM의 게이트를 업데이트·리셋 두 개로 줄인 순환 유닛. 비슷한 성능에 더 가볍습니다.');
+  E('dl','지식 증류',2015,'힌턴, 비냘스, 딘','교사-학생 모델, 소프트 레이블','큰 모델(교사)의 출력 확률 분포를 작은 모델(학생)이 따라 배우게 해 성능을 유지하며 모델을 압축합니다. 소형 LLM 제작에 널리 쓰입니다.');
+  E('dl','그래프 합성곱망(GCN)',2016,'키프 & 웰링','그래프 신경망, 메시지 전달','노드가 이웃의 특징을 모아 표현을 갱신하는 그래프 신경망. 분자·추천·소셜 네트워크 분석에 쓰입니다(ICLR 2017).');
+  E('cv','R-CNN',2014,'로스 걸식 외','영역 제안 + CNN 특징, 2단계 검출','후보 영역마다 CNN 특징을 뽑아 분류하는 2단계 객체 검출. Fast·Faster R-CNN으로 이어지며 검출 성능을 크게 끌어올렸습니다.');
+  E('cv','NeRF',2020,'밀덴홀 외','신경 방사장, 새 시점 합성, 3D 복원','여러 장의 사진으로 장면을 연속적인 신경망 함수로 표현해 새로운 시점의 이미지를 사실적으로 합성합니다.');
+  E('cv','SimCLR · 자기지도 학습',2020,'첸 외 (구글)','대조 학습, 데이터 증강, 레이블 없는 사전학습','같은 이미지의 두 변형은 가깝게, 다른 이미지는 멀게 학습해 레이블 없이 좋은 표현을 얻습니다. 2021년 MAE(가림 복원)와 함께 자기지도 학습을 대표합니다.');
+  E('cv','3D 가우시안 스플래팅',2023,'케르블 외','3D 가우시안, 실시간 렌더링','장면을 수많은 3D 가우시안으로 표현해 NeRF 수준 품질을 실시간으로 렌더링합니다.');
+  E('nlp','ELMo',2018,'피터스 외 (AI2)','문맥 의존 임베딩, 양방향 LSTM','같은 단어도 문맥에 따라 다른 벡터를 주는 문맥 임베딩. BERT 직전 사전학습 흐름을 열었습니다.');
+  E('nlp','T5',2019,'라펠 외 (구글)','텍스트-투-텍스트, 인코더-디코더','번역·요약·분류를 모두 "텍스트를 넣고 텍스트를 내는" 하나의 형식으로 통일한 사전학습 모델입니다.');
+  E('nlp','Chinchilla 스케일링',2022,'호프만 외 (딥마인드)','연산 최적 학습, 토큰 대 파라미터 비율','같은 연산량이라면 모델을 키우기보다 데이터를 더 많이 써야 한다는 결과(파라미터당 약 20토큰). 이후 LLM 학습 방식을 바꿨습니다.');
+  E('nlp','Mistral · Mixtral',2023,'미스트랄 AI','효율적 오픈 모델, 희소 MoE','9월 Mistral 7B, 12월 MoE 구조의 Mixtral 8x7B를 오픈 웨이트로 공개해 작은 모델의 효율 경쟁을 이끌었습니다.');
+  E('nlp','Gemini 1.0',2023,'구글 딥마인드','네이티브 멀티모달','12월 공개. 텍스트·이미지·오디오·영상을 처음부터 함께 학습한 구글의 첫 Gemini 모델입니다.');
+  E('rl','REINFORCE',1992,'로널드 윌리엄스','정책 경사, 몬테카를로 추정','보상의 기대값을 정책 파라미터로 직접 미분해 올리는 정책 경사 알고리즘의 원형. LLM RL 기법들의 뿌리입니다.');
+  E('rl','A3C',2016,'므니 외 (딥마인드)','비동기 액터-크리틱, 병렬 학습','여러 에이전트를 병렬로 돌리며 액터(정책)와 크리틱(가치)을 함께 학습하는 방법입니다.');
+  E('rl','MuZero',2019,'딥마인드','학습된 모델로 계획, 모델 기반 RL','규칙을 모른 채 환경 모델을 스스로 학습하고 그 안에서 탐색해 바둑·체스·아타리 모두에서 최고 수준에 도달했습니다.');
+  E('rl','헌법적 AI (RLAIF)',2022,'Anthropic','AI 피드백 강화학습, 원칙 기반 정렬','사람 대신 원칙 목록을 참고한 AI가 응답을 평가·수정해 그 피드백으로 강화학습합니다. 정렬 비용을 줄이는 방법으로 확산되었습니다.');
+  E('rl','DPO',2023,'라파일로프 외 (스탠퍼드)','직접 선호 최적화, 보상 모델 없는 정렬','선호 데이터로 언어모델을 바로 최적화해 별도 보상 모델과 PPO 없이 RLHF와 비슷한 효과를 냅니다. 오픈 모델 정렬의 표준이 되었습니다.');
+  E('gen','정규화 흐름(RealNVP)',2016,'딘 외','가역 변환, 정확한 우도','가역 변환을 쌓아 단순한 분포를 복잡한 데이터 분포로 바꾸는 생성 모델로, 우도를 정확히 계산할 수 있습니다.');
+  E('gen','스코어 기반 생성 모델',2019,'송양 & 에르몬','스코어 매칭, 랑주뱅 동역학','데이터 분포의 기울기(스코어)를 학습해 노이즈에서 샘플을 만들어 내는 방법. DDPM과 함께 확산 모델 이론의 두 기둥입니다.');
+  E('gen','Flow Matching',2022,'립만 외 (메타)','연속 흐름, 속도장 학습','노이즈에서 데이터로 가는 경로의 속도장을 직접 학습하는 생성 방법. 최신 이미지·영상 모델에 널리 쓰입니다.');
+  E('gen','ControlNet',2023,'장뤼민 외 (스탠퍼드)','조건부 제어, 포즈·윤곽선 입력','윤곽선, 포즈, 깊이 맵 같은 조건으로 확산 모델의 구도를 정밀하게 제어하는 추가 네트워크입니다.');
+  E('rob','ALVINN',1989,'딘 포멀로 (CMU)','신경망 자율주행, 모방 학습','카메라 영상을 입력받아 조향을 출력하는 신경망으로 차량을 몰았던 초기 종단간 자율주행 연구입니다.');
+  E('rob','Dactyl 루빅스 큐브',2019,'OpenAI','시뮬레이션→현실 전이, 도메인 무작위화','시뮬레이션에서만 학습한 로봇 손이 무작위화 기법으로 현실에서 루빅스 큐브를 조작했습니다.');
+  E('inf','Jupyter Notebook',2014,'프로젝트 주피터 (IPython)','대화형 실행, 데이터 과학 환경','코드·결과·설명을 한 문서에서 실행하는 노트북 환경. 데이터 과학과 ML 실험의 기본 작업 도구가 되었습니다.');
+  E('inf','JAX',2018,'구글','자동 미분, XLA 컴파일, 함수 변환','NumPy 문법에 자동 미분·JIT 컴파일·병렬화를 더한 라이브러리로 TPU 기반 대형 모델 연구에 쓰입니다.');
+  E('inf','MLflow',2018,'데이터브릭스','실험 추적, 모델 레지스트리, MLOps','실험 파라미터·지표·모델을 기록하고 배포까지 관리하는 오픈소스 MLOps 도구입니다.');
+  E('inf','DeepSpeed · ZeRO',2020,'마이크로소프트','분산 학습, 옵티마이저 상태 분할','옵티마이저 상태·기울기·파라미터를 GPU들에 나눠 저장해 수천억 파라미터 모델을 학습할 수 있게 했습니다.');
+
+  return { title: 'AI 완전학습 연표', tracks, items, view: { s: 1940, e: NOW + 3 }, snap: 1, dataVer: DATA_VER };
+}
+const DATA_VER = 3;
+const MOVES = { 'MCP (모델 컨텍스트 프로토콜)': 'app' };
+function mergeSample(d) {
+  const s = sample(), byTitle = new Map(s.items.map(i => [i.title, i]));
+  let added = 0;
+  s.tracks.forEach((t, i) => { if (!d.tracks.some(x => x.id === t.id)) { d.tracks.splice(Math.min(i, d.tracks.length), 0, t); } });
+  const have = new Set();
+  d.items.forEach(it => {
+    have.add(it.title);
+    if (MOVES[it.title]) { const src = byTitle.get(it.title); it.trackId = MOVES[it.title]; if (src) { it.note = src.note; it.color = src.color; } }
+  });
+  s.items.forEach(it => { if (!have.has(it.title)) { d.items.push(it); added++; } });
+  d.dataVer = DATA_VER;
+  return added;
+}
+
+function sanitize(d) {
+  const T = d && (d.tracks || d.countries), I = d && (d.items || d.events);
+  if (!Array.isArray(T) || !Array.isArray(I)) throw new Error('tracks와 items 배열이 필요합니다.');
+  const tracks = T.filter(c => c && c.id != null).map((c, i) => ({ id: String(c.id), name: String(c.name || '이름 없는 분야'), color: hex(c.color) || PALETTE[i % PALETTE.length] }));
+  const ids = new Set(tracks.map(c => c.id));
+  const items = I.filter(e => e && ids.has(String(e.trackId ?? e.countryId)) && Number.isFinite(+e.start)).map(e => {
+    const kind = e.kind === 'event' ? 'event' : 'period';
+    let s = Math.round(+e.start), en = kind === 'period' ? Math.round((e.end != null && Number.isFinite(+e.end) ? +e.end : s + 1) * 10) / 10 : null;
+    if (kind === 'period' && en < s) [s, en] = [en, s];
+    if (kind === 'period' && en === s) en = s + 1;
+    return { id: String(e.id ?? uid()), trackId: String(e.trackId ?? e.countryId), kind, title: String(e.title || '제목 없음'), start: s, end: en,
+      who: String(e.who || ''), tags: String(e.tags || ''), note: String(e.note || ''), color: hex(e.color) || '#3a46a8', band: kind === 'period' && !!e.band, learned: !!e.learned };
+  });
+  const out = { title: String(d.title || 'AI 연표'), tracks, items, snap: [1, 5, 10].includes(+d.snap) ? +d.snap : 1, dataVer: +d.dataVer || 1 };
+  if (d.view && Number.isFinite(+d.view.s) && Number.isFinite(+d.view.e) && d.view.e > d.view.s) out.view = { s: +d.view.s, e: +d.view.e };
+  return out;
+}
+let migrated = 0;
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) {
+      const d = sanitize(JSON.parse(raw));
+      if (!d.view) d.view = { s: 1940, e: NOW + 3 };
+      if (d.dataVer < DATA_VER) migrated = mergeSample(d);
+      return d;
+    }
+  } catch (e) {}
+  return sample();
+}
+let S = load();
+S.q = ''; S.todo = false;
+let saveT = 0;
+function save() { clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify({ title: S.title, tracks: S.tracks, items: S.items.map(strip), view: S.view, snap: S.snap, dataVer: DATA_VER })); } catch (e) {} }, 250); }
+const strip = ({ _lane, ...r }) => r;
+
+/* ---------- 되돌리기 ---------- */
+let undoS = [], redoS = [];
+const snap = () => JSON.stringify({ title: S.title, tracks: S.tracks, items: S.items.map(strip) });
+function checkpoint() { undoS.push(snap()); if (undoS.length > 150) undoS.shift(); redoS = []; syncUndo(); }
+function restore(str) { const d = JSON.parse(str); S.title = d.title; S.tracks = d.tracks; S.items = d.items; if (sel && !findSel()) sel = null; $('#title').value = S.title; buildInspector(); requestRender(); save(); }
+function undo() { if (!undoS.length) return; redoS.push(snap()); restore(undoS.pop()); syncUndo(); toast('되돌렸습니다'); }
+function redo() { if (!redoS.length) return; undoS.push(snap()); restore(redoS.pop()); syncUndo(); toast('다시 실행했습니다'); }
+function syncUndo() { $('#undo').disabled = !undoS.length; $('#redo').disabled = !redoS.length; }
+
+/* ---------- 포맷 ---------- */
+const fy = y => y < 0 ? `BC ${-y}` : `${y}`;
+const rangeOf = it => it.kind === 'event' ? fy(it.start) : `${fy(it.start)}–${it.end >= NOW ? '현재' : fy(it.end)}`;
+const durOf = it => it.kind === 'period' ? `${Math.max(0, Math.round(it.end - it.start))}년간` : '';
+const tagList = s => String(s || '').split(/[,，]/).map(t => t.trim()).filter(Boolean);
+function ink(c) { const n = parseInt(c.slice(1), 16), r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255; return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.62 ? '#171c2b' : '#ffffff'; }
+const cv = document.createElement('canvas').getContext('2d');
+const tw = new Map();
+function textW(s, kind) { const k = kind + s; if (tw.has(k)) return tw.get(k); cv.font = kind === 'm' ? '500 10.5px "JetBrains Mono", monospace' : '700 12px "Gothic A1", sans-serif'; const w = cv.measureText(s).width; tw.set(k, w); return w; }
+function niceStep(span, px, target) { const raw = span / Math.max(1, px / target); for (const s of [1, 2, 5, 10, 20, 25, 50, 100, 200]) if (s >= raw) return s; return 500; }
+
+/* ---------- 상태 헬퍼 ---------- */
+let sel = null; // {type:'item'|'track', id}
+const item = id => S.items.find(e => e.id === id);
+const track = id => S.tracks.find(c => c.id === id);
+function findSel() { return sel && (sel.type === 'item' ? item(sel.id) : track(sel.id)); }
+const snapV = v => Math.round(v / S.snap) * S.snap;
+const trackIdx = id => S.tracks.findIndex(t => t.id === id);
+function ordered() { return [...S.items].sort((a, b) => a.start - b.start || trackIdx(a.trackId) - trackIdx(b.trackId) || (a.kind === 'period' ? -1 : 1)); }
+
+/* ---------- 렌더 ---------- */
+const board = $('#board'), rowsEl = $('#rows'), rtrack = $('#rtrack'), nav = $('#nav');
+let W = 800, raf = 0;
+const X = y => (y - S.view.s) / (S.view.e - S.view.s) * W;
+const Yr = px => S.view.s + px / W * (S.view.e - S.view.s);
+function requestRender() { if (!raf) raf = requestAnimationFrame(render); }
+const matches = (it, q) => !q || [it.title, it.note, it.who, it.tags].some(s => s.toLowerCase().includes(q));
+const isDim = (it, q) => (q && !matches(it, q)) || (S.todo && it.learned);
+
+function layoutRow(c) {
+  const items = S.items.filter(e => e.trackId === c.id);
+  const periods = items.filter(i => i.kind === 'period').sort((a, b) => a.start - b.start || (b.end - a.end));
+  const ends = [];
+  periods.forEach(p => { let l = ends.findIndex(e => e <= p.start); if (l < 0) { l = ends.length; ends.push(p.end); } else ends[l] = p.end; p._lane = l; });
+  const evs = items.filter(i => i.kind === 'event').sort((a, b) => a.start - b.start);
+  const eEnds = []; let strip = false;
+  evs.forEach(ev => {
+    const x = X(ev.start) - 5; ev._lane = null;
+    if (x < -800 || x > W + 20) return;
+    const w = 15 + textW(ev.title, 'b') + 14 + (ev.learned ? 12 : 0) + 5 + textW(fy(ev.start), 'm') + 12;
+    let l = eEnds.findIndex(e => e <= x);
+    if (l < 0 && eEnds.length < MAXL) { l = eEnds.length; eEnds.push(x + w); }
+    else if (l >= 0) eEnds[l] = x + w;
+    else { ev._lane = -1; strip = true; return; }
+    ev._lane = l;
+  });
+  const base = PAD + (strip ? STRIP : 0);
+  return { items, periods, evs, base, strip, nE: eEnds.length, nP: ends.length, h: Math.max(MIN_ROW, base + eEnds.length * EVT_H + ends.length * LANE_H + PAD) };
+}
+
+function render() {
+  raf = 0;
+  W = Math.max(100, rtrack.clientWidth);
+  const v = S.view, span = v.e - v.s;
+  const step = niceStep(span, W, 70);
+  const ticks = [];
+  for (let t = Math.ceil(v.s / step) * step; t <= v.e; t += step) ticks.push(t);
+  const nowIn = NOW_F >= v.s && NOW_F <= v.e;
+  const bands = S.items.filter(i => i.band && i.kind === 'period' && X(i.end) > 0 && X(i.start) < W);
+  rtrack.innerHTML = ticks.map(t => `<div class="tick${t % 10 === 0 && step < 10 ? ' dec' : ''}" style="left:${X(t).toFixed(1)}px"><span>${fy(t)}</span></div>`).join('')
+    + bands.map(b => { const l = Math.max(0, X(b.start)), r = Math.min(W, X(b.end)); return `<div class="bandtag" style="left:${l.toFixed(1)}px;width:${Math.max(0, r - l).toFixed(1)}px;background:${b.color};color:${ink(b.color)}" title="${esc(b.title)}">${esc(b.title)}</div>`; }).join('')
+    + (nowIn ? `<div class="nowtag" style="left:${X(NOW_F).toFixed(1)}px">오늘</div>` : '');
+  const grid = ticks.map(t => `<div class="gl" style="left:${X(t).toFixed(1)}px"></div>`).join('')
+    + bands.map(b => `<div class="band" style="left:${X(b.start).toFixed(1)}px;width:${(X(b.end) - X(b.start)).toFixed(1)}px;--c:${b.color}"></div>`).join('')
+    + (nowIn ? `<div class="nowline" style="left:${X(NOW_F).toFixed(1)}px"></div>` : '');
+  const q = S.q.trim().toLowerCase();
+  const out = [];
+  S.tracks.forEach(c => {
+    const L = layoutRow(c);
+    const parts = [];
+    L.periods.forEach(p => {
+      const x1 = X(p.start), x2 = X(p.end);
+      if (x2 < -20 || x1 > W + 20) return;
+      const cl = x1 < -4, cr = x2 > W + 4;
+      const l = cl ? -4 : x1, r = cr ? W + 4 : x2, w = Math.max(5, r - l);
+      const top = L.base + L.nE * EVT_H + p._lane * LANE_H;
+      const yr = rangeOf(p);
+      const showT = w > 26, showY = w > textW(p.title, 'b') + textW(yr, 'm') + 40;
+      const cls = 'bar' + (sel && sel.id === p.id ? ' sel' : '') + (isDim(p, q) ? ' dim' : '') + (cl ? ' cl' : '') + (cr ? ' cr' : '');
+      parts.push(`<div class="${cls}" data-id="${p.id}" style="left:${l.toFixed(1)}px;width:${w.toFixed(1)}px;top:${top}px;--c:${p.color};color:${ink(p.color)}">${cl ? '' : '<span class="h l"></span>'}${p.learned && showT ? '<span class="ck">✓</span>' : ''}${showT ? `<span class="bt">${esc(p.title)}</span>` : ''}${showY ? `<span class="by">${yr}</span>` : ''}${cr ? '' : '<span class="h r"></span>'}</div>`);
+    });
+    L.evs.forEach(ev => {
+      if (ev._lane == null) return;
+      const x = X(ev.start), mini = ev._lane === -1;
+      const top = mini ? PAD - 2 : L.base + ev._lane * EVT_H, stem = Math.max(0, L.h - top - (mini ? 14 : 18));
+      const cls = 'evt' + (mini ? ' mini' : '') + (ev.learned ? ' done' : '') + (sel && sel.id === ev.id ? ' sel' : '') + (isDim(ev, q) ? ' dim' : '');
+      parts.push(`<div class="${cls}" data-id="${ev.id}" style="left:${(x - 5).toFixed(1)}px;top:${top}px;--c:${ev.color};--stem:${stem}px"><i class="dot"></i>${mini ? '' : `<span class="et">${esc(ev.title)}</span><span class="ey">${fy(ev.start)}</span>`}</div>`);
+    });
+    const done = L.items.filter(i => i.learned).length, tot = L.items.length;
+    const csel = sel && sel.type === 'track' && sel.id === c.id;
+    out.push(`<div class="row${csel ? ' csel' : ''}" data-cid="${c.id}" style="height:${L.h}px"><div class="label" data-cid="${c.id}"><span class="grip" title="끌어서 순서 변경"></span><span class="chip" style="background:${c.color}"></span><span class="ln"><b>${esc(c.name)}</b><small>${done}/${tot} 학습</small><span class="mini-bar"><i style="width:${tot ? done / tot * 100 : 0}%"></i></span></span></div><div class="track">${grid}${parts.join('')}</div></div>`);
+  });
+  rowsEl.innerHTML = out.length ? out.join('') : `<div class="empty">아직 분야가 없습니다. 위의 <b>+ 분야</b>로 첫 줄을 만드세요.</div>`;
+  renderProgress(); renderNav(); syncZoom();
+}
+function renderProgress() {
+  const tot = S.items.length, done = S.items.filter(i => i.learned).length, pct = tot ? Math.round(done / tot * 100) : 0;
+  $('#pg-n').textContent = `${done} / ${tot}`; $('#pg-bar').style.width = pct + '%'; $('#pg-pct').textContent = pct + '%';
+}
+
+/* ---------- 내비게이터 (슬라이드) ---------- */
+let navExt = [0, 1], navDrag = null;
+function computeExt() {
+  let mn = Infinity, mx = -Infinity;
+  S.items.forEach(e => { mn = Math.min(mn, e.start); mx = Math.max(mx, e.end ?? e.start); });
+  if (!Number.isFinite(mn)) { mn = NOW - 80; mx = NOW; }
+  mn = Math.min(mn, S.view.s); mx = Math.max(mx, S.view.e);
+  const p = (mx - mn) * 0.03 || 3;
+  return [mn - p, mx + p];
+}
+function renderNav() {
+  const ext = navDrag ? navDrag.ext : computeExt(); navExt = ext;
+  const NW = nav.clientWidth, NH = nav.clientHeight;
+  const nx = y => (y - ext[0]) / (ext[1] - ext[0]) * NW;
+  const h = [];
+  const st = niceStep(ext[1] - ext[0], NW, 80);
+  for (let t = Math.ceil(ext[0] / st) * st; t <= ext[1]; t += st) h.push(`<div class="ntk" style="left:${nx(t).toFixed(1)}px"><span>${fy(t)}</span></div>`);
+  S.items.forEach(b => { if (b.band && b.kind === 'period') h.push(`<i class="nb" style="left:${nx(b.start).toFixed(1)}px;width:${(nx(b.end) - nx(b.start)).toFixed(1)}px;background:${b.color}"></i>`); });
+  const n = Math.max(1, S.tracks.length), top0 = 18, rowH = (NH - top0 - 6) / n;
+  S.tracks.forEach((c, i) => {
+    const y = top0 + i * rowH + rowH / 2 - 1.5;
+    S.items.forEach(e => {
+      if (e.trackId !== c.id) return;
+      if (e.kind === 'period') h.push(`<i class="np" style="left:${nx(e.start).toFixed(1)}px;width:${Math.max(2, nx(e.end) - nx(e.start)).toFixed(1)}px;top:${y.toFixed(1)}px;background:${e.color}"></i>`);
+      else h.push(`<i class="ne" style="left:${(nx(e.start) - 1).toFixed(1)}px;top:${(y - 2).toFixed(1)}px;background:${e.color}"></i>`);
+    });
+  });
+  const bl = nx(S.view.s), br = nx(S.view.e);
+  h.push(`<div class="shade" style="left:0;width:${Math.max(0, bl).toFixed(1)}px"></div><div class="shade" style="left:${br.toFixed(1)}px;right:0"></div><div class="brush" style="left:${bl.toFixed(1)}px;width:${Math.max(6, br - bl).toFixed(1)}px"><span class="bh l"></span><span class="bh r"></span></div>`);
+  nav.innerHTML = h.join('');
+}
+nav.addEventListener('pointerdown', e => {
+  if (e.button !== 0) return;
+  const r = nav.getBoundingClientRect(), ext = navExt, k = (ext[1] - ext[0]) / r.width;
+  let mode = 'move';
+  const bh = e.target.closest('.bh');
+  if (bh) mode = bh.classList.contains('l') ? 'l' : 'r';
+  else if (!e.target.closest('.brush')) { const c = ext[0] + (e.clientX - r.left) * k, sp = S.view.e - S.view.s; S.view = { s: c - sp / 2, e: c + sp / 2 }; }
+  navDrag = { mode, x0: e.clientX, ext, k, o: { ...S.view } };
+  nav.setPointerCapture(e.pointerId); e.preventDefault(); requestRender();
+});
+nav.addEventListener('pointermove', e => {
+  if (!navDrag) return;
+  const d = (e.clientX - navDrag.x0) * navDrag.k, o = navDrag.o;
+  if (navDrag.mode === 'move') S.view = { s: o.s + d, e: o.e + d };
+  else if (navDrag.mode === 'l') S.view = { s: clamp(o.s + d, o.e - MAX_SPAN, o.e - MIN_SPAN), e: o.e };
+  else S.view = { s: o.s, e: clamp(o.e + d, o.s + MIN_SPAN, o.s + MAX_SPAN) };
+  requestRender();
+});
+const navEnd = () => { if (navDrag) { navDrag = null; save(); requestRender(); } };
+nav.addEventListener('pointerup', navEnd); nav.addEventListener('pointercancel', navEnd);
+
+/* ---------- 보기 조작 ---------- */
+function setView(s, e) { const sp = clamp(e - s, MIN_SPAN, MAX_SPAN), c = (s + e) / 2; S.view = { s: c - sp / 2, e: c + sp / 2 }; save(); requestRender(); }
+function zoomAt(f, c) { const v = S.view, sp = v.e - v.s, ns = clamp(sp * f, MIN_SPAN, MAX_SPAN), k = ns / sp; S.view = { s: c - (c - v.s) * k, e: c + (v.e - c) * k }; save(); requestRender(); }
+function fit() {
+  if (!S.items.length) { setView(NOW - 80, NOW + 3); return; }
+  let mn = Infinity, mx = -Infinity; S.items.forEach(e => { mn = Math.min(mn, e.start); mx = Math.max(mx, e.end ?? e.start); });
+  const p = Math.max(2, (mx - mn) * 0.03); setView(mn - p, mx + p);
+}
+function scrollRowIntoView(id) {
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const el = rowsEl.querySelector(`[data-id="${id}"]`); if (!el) return;
+    const b = board.getBoundingClientRect(), r = el.getBoundingClientRect(), head = 46;
+    if (r.top < b.top + head) board.scrollTop -= (b.top + head - r.top) + 20;
+    else if (r.bottom > b.bottom) board.scrollTop += (r.bottom - b.bottom) + 20;
+  }));
+}
+function focusItem(it) {
+  const sp = S.view.e - S.view.s, a = it.start, b = it.end ?? it.start, len = b - a;
+  if (len * 1.3 > sp) setView(a - len * 0.15, b + len * 0.15);
+  else if (a < S.view.s + sp * 0.08 || b > S.view.e - sp * 0.08) { const c = (a + b) / 2; setView(c - sp / 2, c + sp / 2); }
+  scrollRowIntoView(it.id);
+}
+const LMIN = Math.log10(MIN_SPAN), LMAX = Math.log10(MAX_SPAN);
+function syncZoom() { const z = $('#zoom'); if (document.activeElement !== z) z.value = Math.round((LMAX - Math.log10(S.view.e - S.view.s)) / (LMAX - LMIN) * 1000); }
+$('#zoom').addEventListener('input', e => { const ns = 10 ** (LMAX - (LMAX - LMIN) * e.target.value / 1000), c = (S.view.s + S.view.e) / 2; S.view = { s: c - ns / 2, e: c + ns / 2 }; save(); requestRender(); });
+$('#zoom-in').onclick = () => zoomAt(0.7, (S.view.s + S.view.e) / 2);
+$('#zoom-out').onclick = () => zoomAt(1 / 0.7, (S.view.s + S.view.e) / 2);
+$('#fit').onclick = fit;
+const ERAS = [[1940, 1976], [1968, 2001], [1985, 2013], [2005, 2021], [2013, NOW + 1], [2021.6, NOW + 1]];
+$('#era').addEventListener('change', e => { const v = ERAS[+e.target.value]; if (v) setView(v[0], v[1]); e.target.value = ''; });
+board.addEventListener('wheel', e => {
+  const r = rtrack.getBoundingClientRect(); if (e.clientX < r.left) return;
+  const sp = S.view.e - S.view.s;
+  if (e.ctrlKey || e.metaKey) { e.preventDefault(); zoomAt(Math.exp(e.deltaY * 0.0018), Yr(e.clientX - r.left)); }
+  else if (e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) { e.preventDefault(); const d = e.shiftKey ? (e.deltaY || e.deltaX) : e.deltaX; const k = d / W * sp; S.view = { s: S.view.s + k, e: S.view.e + k }; save(); requestRender(); }
+}, { passive: false });
+
+/* ---------- 차트 위 끌기 ---------- */
+let drag = null;
+const tip = $('#tip');
+function showTip(it, x, y) {
+  const c = track(it.trackId);
+  tip.innerHTML = `<b>${it.learned ? '✓ ' : ''}${esc(it.title)}</b><span class="m">${rangeOf(it)}${it.kind === 'period' ? ' · ' + durOf(it) : ''}${c ? ' · ' + esc(c.name) : ''}</span>${it.who ? `<div class="m">${esc(it.who)}</div>` : ''}${it.note ? `<div class="n">${esc(it.note.length > 140 ? it.note.slice(0, 140) + '…' : it.note)}</div>` : ''}`;
+  tip.hidden = false;
+  const tw_ = tip.offsetWidth, th = tip.offsetHeight;
+  tip.style.left = Math.max(8, Math.min(innerWidth - tw_ - 8, x + 14)) + 'px';
+  tip.style.top = (y + th + 24 > innerHeight ? y - th - 14 : y + 18) + 'px';
+}
+board.addEventListener('pointermove', e => {
+  if (drag || e.pointerType === 'touch') return;
+  const el = e.target.closest('.bar,.evt');
+  if (el) showTip(item(el.dataset.id), e.clientX, e.clientY); else tip.hidden = true;
+});
+board.addEventListener('pointerleave', () => { if (!drag) tip.hidden = true; });
+board.addEventListener('pointerdown', e => {
+  if (e.button !== 0) return;
+  if (document.activeElement && $('#insp').contains(document.activeElement)) document.activeElement.blur();
+  const grip = e.target.closest('.grip'), label = e.target.closest('.label');
+  const el = e.target.closest('.bar,.evt'), tr = e.target.closest('.track');
+  let d = { x0: e.clientX, y0: e.clientY, moved: false, W, span: S.view.e - S.view.s };
+  if (grip) d = { ...d, mode: 'reorder', cid: grip.closest('.row').dataset.cid };
+  else if (label) d = { ...d, mode: 'label', cid: label.dataset.cid };
+  else if (el) {
+    const it = item(el.dataset.id); if (!it) return;
+    const h = e.target.closest('.h');
+    d = { ...d, mode: h ? (h.classList.contains('l') ? 'rl' : 'rr') : 'move', it, o: { start: it.start, end: it.end } };
+  } else if (tr) d = { ...d, mode: 'pan', o: { ...S.view } };
+  else return;
+  if (e.pointerType === 'mouse' || d.mode !== 'pan') e.preventDefault();
+  drag = d;
+  addEventListener('pointermove', onMove); addEventListener('pointerup', onUp); addEventListener('pointercancel', onCancel);
+});
+function onMove(e) {
+  const d = drag; if (!d) return;
+  const dx = e.clientX - d.x0, dy = e.clientY - d.y0;
+  if (!d.moved) {
+    if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+    d.moved = true;
+    if (['move', 'rl', 'rr'].includes(d.mode)) { checkpoint(); select({ type: 'item', id: d.it.id }); }
+    if (d.mode === 'pan') board.classList.add('panning');
+  }
+  const dyr = dx / d.W * d.span;
+  if (d.mode === 'pan') { S.view = { s: d.o.s - dyr, e: d.o.e - dyr }; requestRender(); return; }
+  if (d.mode === 'reorder') {
+    document.querySelectorAll('.row.drop-before,.row.drop-after').forEach(r => r.classList.remove('drop-before', 'drop-after'));
+    const r = rowAt(e.clientY); if (r) r.el.classList.add(r.after ? 'drop-after' : 'drop-before'); d.target = r; return;
+  }
+  if (d.mode === 'label') return;
+  const it = d.it, o = d.o;
+  if (d.mode === 'move') {
+    it.start = snapV(o.start + dyr);
+    if (it.kind === 'period') it.end = it.start + (o.end - o.start);
+    const rowEl = document.elementFromPoint(e.clientX, e.clientY)?.closest('.row');
+    if (rowEl && rowEl.dataset.cid) it.trackId = rowEl.dataset.cid;
+  } else if (d.mode === 'rl') it.start = Math.min(snapV(o.start + dyr), it.end - 1);
+  else if (d.mode === 'rr') it.end = Math.max(snapV(o.end + dyr), it.start + 1);
+  showTip(it, e.clientX, e.clientY);
+  refreshInspectorValues();
+  requestRender();
+}
+function rowAt(y) {
+  const rows = [...rowsEl.querySelectorAll('.row')];
+  for (const r of rows) { const b = r.getBoundingClientRect(); if (y >= b.top && y <= b.bottom) return { el: r, cid: r.dataset.cid, after: y > b.top + b.height / 2 }; }
+  if (rows.length) { const last = rows[rows.length - 1]; if (y > last.getBoundingClientRect().bottom) return { el: last, cid: last.dataset.cid, after: true }; }
+  return null;
+}
+function endDrag() { removeEventListener('pointermove', onMove); removeEventListener('pointerup', onUp); removeEventListener('pointercancel', onCancel); board.classList.remove('panning'); }
+function onCancel() { endDrag(); drag = null; tip.hidden = true; requestRender(); }
+function onUp() {
+  const d = drag; endDrag(); drag = null;
+  if (!d) return;
+  if (!d.moved) {
+    if (d.mode === 'label' || d.mode === 'reorder') select({ type: 'track', id: d.cid });
+    else if (d.it) select({ type: 'item', id: d.it.id });
+    else if (d.mode === 'pan') select(null);
+    return;
+  }
+  tip.hidden = true;
+  if (d.mode === 'reorder' && d.target && d.target.cid !== d.cid) {
+    checkpoint();
+    const from = trackIdx(d.cid); const [c] = S.tracks.splice(from, 1);
+    let to = trackIdx(d.target.cid); if (d.target.after) to++;
+    S.tracks.splice(to, 0, c);
+  }
+  document.querySelectorAll('.row.drop-before,.row.drop-after').forEach(r => r.classList.remove('drop-before', 'drop-after'));
+  if (d.it) buildInspector();
+  save(); requestRender();
+}
+board.addEventListener('dblclick', e => {
+  const el = e.target.closest('.bar,.evt');
+  if (el) { select({ type: 'item', id: el.dataset.id }); const det = insp.querySelector('details'); if (det) det.open = true; const t = $('#f-title'); if (t) { t.focus(); t.select(); } return; }
+  const tr = e.target.closest('.track'); if (!tr) return;
+  addItem('period', tr.closest('.row').dataset.cid, Yr(e.clientX - tr.getBoundingClientRect().left));
+});
+
+/* ---------- 추가 / 삭제 ---------- */
+function currentTrackId() {
+  if (sel) { const x = findSel(); if (x) return sel.type === 'track' ? x.id : x.trackId; }
+  return S.tracks[0]?.id;
+}
+function addItem(kind, cid, at) {
+  cid = cid || currentTrackId();
+  if (!cid) { toast('먼저 분야를 추가하세요'); return; }
+  checkpoint();
+  const sp = S.view.e - S.view.s, c = at ?? (S.view.s + S.view.e) / 2;
+  const len = Math.max(S.snap, snapV(sp * 0.08)) || 1;
+  const start = kind === 'period' ? snapV(c - len / 2) : snapV(c);
+  const it = { id: uid(), trackId: cid, kind, title: kind === 'period' ? '새 기간' : '새 개념', start, end: kind === 'period' ? start + len : null, who: '', tags: '', note: '', color: track(cid)?.color || PALETTE[0], band: false, learned: false };
+  S.items.push(it); select({ type: 'item', id: it.id }, true); save();
+  const t = $('#f-title'); if (t) { t.focus(); t.select(); }
+}
+function addTrack() {
+  checkpoint();
+  const c = { id: uid(), name: `새 분야 ${S.tracks.length + 1}`, color: PALETTE[S.tracks.length % PALETTE.length] };
+  S.tracks.push(c); select({ type: 'track', id: c.id }); save();
+  const n = $('#c-name'); if (n) { n.focus(); n.select(); }
+  requestAnimationFrame(() => { board.scrollTop = board.scrollHeight; });
+}
+function deleteSelected() {
+  if (!sel) return;
+  checkpoint();
+  if (sel.type === 'item') { S.items = S.items.filter(e => e.id !== sel.id); toast('삭제했습니다 · Ctrl+Z로 되돌리기'); }
+  else { const id = sel.id; S.tracks = S.tracks.filter(c => c.id !== id); S.items = S.items.filter(e => e.trackId !== id); toast('분야와 항목을 삭제했습니다 · Ctrl+Z로 되돌리기'); }
+  select(null); save();
+}
+function toggleLearned(it) {
+  checkpoint(); it.learned = !it.learned; save(); buildInspector(); requestRender();
+  if (it.learned) toast(`✓ ${it.title} 학습 완료`);
+}
+function step(dir) {
+  let list = ordered(); if (S.todo) list = list.filter(i => !i.learned || (sel && i.id === sel.id));
+  if (!list.length) return;
+  let i = sel && sel.type === 'item' ? list.findIndex(x => x.id === sel.id) : -1;
+  i = i < 0 ? (dir > 0 ? 0 : list.length - 1) : i + dir;
+  if (i < 0 || i >= list.length) { toast(dir > 0 ? '마지막 항목입니다' : '첫 항목입니다'); return; }
+  const it = list[i]; select({ type: 'item', id: it.id }); focusItem(it);
+}
+$('#add-period').onclick = () => addItem('period');
+$('#add-event').onclick = () => addItem('event');
+$('#add-track').onclick = addTrack;
+$('#undo').onclick = undo; $('#redo').onclick = redo;
+$('#todo').onclick = e => { S.todo = !S.todo; e.currentTarget.classList.toggle('on', S.todo); e.currentTarget.setAttribute('aria-pressed', S.todo); requestRender(); };
+
+/* ---------- 인스펙터 (학습 카드) ---------- */
+const insp = $('#insp');
+let editCk = false;
+function select(s, openEdit) { sel = s; buildInspector(openEdit); requestRender(); }
+function swatches(cur) {
+  return `<div class="sws">${PALETTE.map(c => `<button class="sw${c === cur ? ' on' : ''}" data-c="${c}" style="--c:${c}" aria-label="색상 ${c}"></button>`).join('')}<label class="swc" title="직접 고르기">＋<input type="color" id="f-color" value="${cur}"></label></div>`;
+}
+function buildInspector(openEdit) {
+  const x = findSel();
+  if (!x) { insp.hidden = true; insp.innerHTML = ''; return; }
+  editCk = false;
+  const wasOpen = !!insp.querySelector('details[open]');
+  if (sel.type === 'item') {
+    const it = x, tr = track(it.trackId);
+    const list = ordered(), idx = list.findIndex(i => i.id === it.id);
+    insp.innerHTML = `<div class="ih"><h2><span class="kind">${it.kind === 'period' ? '기간' : '개념·사건'} · ${esc(tr?.name || '')} · ${idx + 1}/${list.length}</span><span id="ih-t">${esc(it.title)}</span></h2><button class="x" data-act="close" aria-label="닫기">×</button></div>
+    <div class="ib">
+      <div class="study"><button class="learn${it.learned ? ' on' : ''}" data-act="learn">${it.learned ? '✓ 학습 완료' : '○ 학습 완료로 표시'}</button><div class="stepper"><button data-act="prev" title="이전 개념 ([)" aria-label="이전 개념">←</button><button data-act="next" title="다음 개념 (])" aria-label="다음 개념">→</button></div></div>
+      <div class="meta"><span class="yrs" id="m-yrs">${rangeOf(it)}</span>${it.kind === 'period' ? `<span id="m-dur">${durOf(it)}</span>` : ''}${it.who ? `<span>· ${esc(it.who)}</span>` : ''}</div>
+      ${it.note ? `<p class="small" style="color:var(--ink);font-size:14px;line-height:1.7">${esc(it.note)}</p>` : '<p class="small">아직 설명이 없습니다. 아래 편집에서 설명을 적어 두세요.</p>'}
+      ${tagList(it.tags).length ? `<div class="tags">${tagList(it.tags).map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>` : ''}
+      <details${openEdit || wasOpen ? ' open' : ''}><summary>편집</summary><div>
+        <label class="f">제목<input id="f-title" type="text" value="${esc(it.title)}"></label>
+        <div class="seg" role="group" aria-label="종류"><button data-kind="period" class="${it.kind === 'period' ? 'on' : ''}">기간 (시작–끝)</button><button data-kind="event" class="${it.kind === 'event' ? 'on' : ''}">사건 (한 해)</button></div>
+        <label class="f">분야<select id="f-track">${S.tracks.map(c => `<option value="${c.id}"${c.id === it.trackId ? ' selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label>
+        <div class="yr2"><label class="f">${it.kind === 'period' ? '시작 연도' : '연도'}<input id="f-start" type="number" step="1" value="${it.start}"></label>${it.kind === 'period' ? `<label class="f">끝 연도<input id="f-end" type="number" step="1" value="${it.end}"></label>` : '<span></span>'}</div>
+        <label class="f">인물·기관<input id="f-who" type="text" value="${esc(it.who)}" placeholder="예: 힌턴, 구글"></label>
+        <label class="f">핵심 키워드 (쉼표로 구분)<input id="f-tags" type="text" value="${esc(it.tags)}" placeholder="예: 역전파, 은닉층"></label>
+        <label class="f">설명<textarea id="f-note" rows="5" placeholder="이 개념이 무엇이고 왜 중요한지">${esc(it.note)}</textarea></label>
+        <div class="f"><span class="small">색상</span>${swatches(it.color)}</div>
+        ${it.kind === 'period' ? `<label class="chk"><input id="f-band" type="checkbox"${it.band ? ' checked' : ''}> 모든 분야에 시대 배경(빗금)으로 표시</label>` : ''}
+        <div class="acts"><button class="btn" data-act="focus">연표에서 보기</button><button class="btn" data-act="dup">복제</button><button class="btn danger" data-act="del">삭제</button></div>
+      </div></details>
+    </div>`;
+  } else {
+    const c = x, its = S.items.filter(e => e.trackId === c.id), n = its.length, dn = its.filter(i => i.learned).length, i = S.tracks.indexOf(c);
+    insp.innerHTML = `<div class="ih"><h2><span class="kind">분야 편집 · 학습 ${dn}/${n}</span><span id="ih-t">${esc(c.name)}</span></h2><button class="x" data-act="close" aria-label="닫기">×</button></div>
+    <div class="ib">
+      <label class="f">이름<input id="c-name" type="text" value="${esc(c.name)}"></label>
+      <div class="f"><span class="small">대표 색상 · 새 항목의 기본 색</span>${swatches(c.color)}</div>
+      <div class="acts"><button class="btn" data-act="up"${i === 0 ? ' disabled' : ''}>↑ 위로</button><button class="btn" data-act="down"${i === S.tracks.length - 1 ? ' disabled' : ''}>↓ 아래로</button><button class="btn" data-act="tpath">이 분야 학습 경로</button></div>
+      <div class="acts"><button class="btn pri" data-act="add-p">+ 이 분야에 기간</button><button class="btn" data-act="add-e">+ 개념·사건</button></div>
+      <div class="acts"><button class="btn ok" data-act="all-learn">모두 학습 완료</button><button class="btn" data-act="all-reset">학습 표시 초기화</button></div>
+      <p class="small">분야를 삭제하면 그 안의 항목 ${n}개도 함께 지워집니다.</p>
+      <div class="acts"><button class="btn danger" data-act="cdel">분야 삭제</button><button class="btn" data-act="recolor">모든 항목을 대표 색으로</button></div>
+    </div>`;
+  }
+  insp.hidden = false;
+}
+function refreshInspectorValues() {
+  if (!sel || sel.type !== 'item') return; const it = item(sel.id); if (!it) return;
+  const set = (id, v) => { const el = $('#' + id); if (el && document.activeElement !== el) el.value = v; };
+  set('f-start', it.start); if (it.kind === 'period') set('f-end', it.end);
+  set('f-track', it.trackId);
+  const y = $('#m-yrs'); if (y) y.textContent = rangeOf(it);
+  const d = $('#m-dur'); if (d) d.textContent = durOf(it);
+}
+insp.addEventListener('focusin', () => { editCk = false; });
+function onField(e) {
+  const id = e.target.id; if (!id || !sel) return;
+  const x = findSel(); if (!x) return;
+  if (!editCk) { checkpoint(); editCk = true; }
+  if (sel.type === 'item') {
+    const it = x;
+    if (id === 'f-title') { it.title = e.target.value; $('#ih-t').textContent = it.title; }
+    else if (id === 'f-track') it.trackId = e.target.value;
+    else if (id === 'f-start') { const v = Math.round(+e.target.value); if (Number.isFinite(v) && e.target.value !== '') { it.start = v; if (it.kind === 'period' && e.type === 'change' && it.end <= it.start) it.end = it.start + 1; } }
+    else if (id === 'f-end') { const v = Math.round(+e.target.value); if (Number.isFinite(v) && e.target.value !== '') { it.end = v; if (e.type === 'change' && it.end <= it.start) { const s = it.start; it.start = Math.min(s, it.end); it.end = Math.max(s, it.end); if (it.end === it.start) it.end++; } } }
+    else if (id === 'f-who') it.who = e.target.value;
+    else if (id === 'f-tags') it.tags = e.target.value;
+    else if (id === 'f-note') it.note = e.target.value;
+    else if (id === 'f-band') it.band = e.target.checked;
+    else if (id === 'f-color') { it.color = e.target.value; insp.querySelectorAll('.sw').forEach(b => b.classList.toggle('on', b.dataset.c === it.color)); }
+    if (e.type === 'change') refreshInspectorValues();
+    const y = $('#m-yrs'); if (y) y.textContent = rangeOf(it);
+  } else {
+    if (id === 'c-name') { x.name = e.target.value; $('#ih-t').textContent = x.name; }
+    else if (id === 'f-color') { x.color = e.target.value; insp.querySelectorAll('.sw').forEach(b => b.classList.toggle('on', b.dataset.c === x.color)); }
+  }
+  save(); requestRender();
+}
+insp.addEventListener('input', onField);
+insp.addEventListener('change', onField);
+let armT = 0;
+insp.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b || !sel) return;
+  const x = findSel(); if (!x) return;
+  if (b.dataset.c) { checkpoint(); x.color = b.dataset.c; insp.querySelectorAll('.sw').forEach(s => s.classList.toggle('on', s === b)); const ci = $('#f-color'); if (ci) ci.value = x.color; save(); requestRender(); return; }
+  if (b.dataset.kind && sel.type === 'item' && b.dataset.kind !== x.kind) {
+    checkpoint(); x.kind = b.dataset.kind;
+    if (x.kind === 'event') { x.end = null; x.band = false; } else x.end = x.start + Math.max(S.snap, snapV((S.view.e - S.view.s) * 0.08) || 1);
+    buildInspector(true); save(); requestRender(); return;
+  }
+  switch (b.dataset.act) {
+    case 'close': select(null); break;
+    case 'learn': toggleLearned(x); break;
+    case 'prev': step(-1); break;
+    case 'next': step(1); break;
+    case 'focus': focusItem(x); break;
+    case 'dup': { checkpoint(); const cp = { ...strip(x), id: uid(), title: x.title + ' (복제)', learned: false }; S.items.push(cp); select({ type: 'item', id: cp.id }, true); save(); break; }
+    case 'del': deleteSelected(); break;
+    case 'up': case 'down': { checkpoint(); const i = S.tracks.indexOf(x), j = i + (b.dataset.act === 'up' ? -1 : 1); [S.tracks[i], S.tracks[j]] = [S.tracks[j], S.tracks[i]]; buildInspector(); save(); requestRender(); break; }
+    case 'add-p': addItem('period', x.id); break;
+    case 'add-e': addItem('event', x.id); break;
+    case 'tpath': openPath(x.id); break;
+    case 'all-learn': case 'all-reset': { checkpoint(); const v = b.dataset.act === 'all-learn'; S.items.forEach(i => { if (i.trackId === x.id) i.learned = v; }); buildInspector(); save(); requestRender(); toast(v ? '이 분야를 모두 학습 완료로 표시했습니다' : '학습 표시를 초기화했습니다'); break; }
+    case 'recolor': checkpoint(); S.items.forEach(ev => { if (ev.trackId === x.id) ev.color = x.color; }); save(); requestRender(); toast('색을 맞췄습니다'); break;
+    case 'cdel':
+      if (b.classList.contains('armed')) { clearTimeout(armT); deleteSelected(); }
+      else { b.classList.add('armed'); b.textContent = '한 번 더 누르면 삭제'; armT = setTimeout(() => { b.classList.remove('armed'); b.textContent = '분야 삭제'; }, 3000); }
+      break;
+  }
+});
+
+/* ---------- 학습 경로 ---------- */
+const pathM = $('#path'), pList = $('#p-list');
+function openPath(tid) {
+  $('#p-track').innerHTML = `<option value="">모든 분야</option>` + S.tracks.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('');
+  $('#p-track').value = tid || '';
+  pathM.hidden = false; renderPath(); $('#p-q').focus();
+}
+function renderPath() {
+  const tid = $('#p-track').value, st = $('#p-state').value, q = $('#p-q').value.trim().toLowerCase();
+  const list = ordered().filter(i => (!tid || i.trackId === tid) && (st === 'all' || (st === 'todo' ? !i.learned : i.learned)) && matches(i, q));
+  let dec = null; const h = [];
+  list.forEach(i => {
+    const d = Math.floor(i.start / 10) * 10;
+    if (d !== dec) { dec = d; h.push(`<li class="dec">${d}년대</li>`); }
+    const t = track(i.trackId);
+    h.push(`<li class="${i.learned ? 'done' : ''}"><input type="checkbox" data-id="${i.id}" ${i.learned ? 'checked' : ''} aria-label="${esc(i.title)} 학습 완료"><span class="py">${i.kind === 'period' ? `${i.start}–` : i.start}</span><span class="pt"><button data-go="${i.id}">${esc(i.title)}</button><span class="tr"><i style="background:${t?.color}"></i>${esc(t?.name || '')}${i.kind === 'period' ? ' · ' + rangeOf(i) : ''}</span>${i.note ? `<span class="pn">${esc(i.note)}</span>` : ''}</span></li>`);
+  });
+  pList.innerHTML = h.length ? h.join('') : `<li style="display:block;color:var(--muted)">조건에 맞는 항목이 없습니다.</li>`;
+  const tot = ordered().filter(i => !tid || i.trackId === tid), dn = tot.filter(i => i.learned).length;
+  $('#p-desc').textContent = `${tid ? track(tid)?.name + ' · ' : ''}${tot.length}개 중 ${dn}개 학습 완료. 제목을 누르면 연표의 그 위치로 이동하고, 체크하면 학습 완료로 표시됩니다.`;
+}
+['p-track', 'p-state'].forEach(id => $('#' + id).addEventListener('change', renderPath));
+$('#p-q').addEventListener('input', renderPath);
+pList.addEventListener('change', e => { const it = item(e.target.dataset.id); if (!it) return; checkpoint(); it.learned = e.target.checked; save(); requestRender(); buildInspector(); renderPath(); });
+pList.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (!b) return; const it = item(b.dataset.go); pathM.hidden = true; select({ type: 'item', id: it.id }); focusItem(it); });
+$('#open-path').onclick = () => openPath('');
+$('#p-close').onclick = () => { pathM.hidden = true; };
+pathM.addEventListener('click', e => { if (e.target === pathM) pathM.hidden = true; });
+
+/* ---------- 카드 복습 ---------- */
+const cardM = $('#cardm');
+let card = null, revealed = false;
+function maskText(s, title) {
+  let out = esc(s);
+  const parts = [title, ...title.split(/[·,()]|\s[-–]\s/)].map(p => p.trim()).filter(p => p.length >= 2).sort((a, b) => b.length - a.length);
+  parts.forEach(p => { out = out.split(esc(p)).join('<span class="mask">' + '■'.repeat(Math.min(6, p.length)) + '</span>'); });
+  return out;
+}
+function nextCard() {
+  const pool = S.items.filter(i => !i.learned && i.note);
+  const src = pool.length ? pool : S.items.filter(i => i.note);
+  if (!src.length) { card = null; renderCard(); return; }
+  let c; do { c = src[Math.floor(Math.random() * src.length)]; } while (src.length > 1 && card && c.id === card.id);
+  card = c; revealed = false; renderCard();
+}
+function renderCard() {
+  const box = $('#c-card'), acts = $('#c-acts');
+  const left = S.items.filter(i => !i.learned).length;
+  $('#c-desc').textContent = left ? `설명과 인물을 보고 무엇인지 떠올려 보세요. 남은 미학습 항목 ${left}개.` : '모든 항목을 학습했습니다. 이제 전체에서 무작위로 복습합니다.';
+  if (!card) { box.innerHTML = '<p class="q">설명이 있는 항목이 없습니다. 항목에 설명을 적으면 카드로 복습할 수 있습니다.</p>'; acts.innerHTML = ''; return; }
+  const t = track(card.trackId);
+  box.innerHTML = `<div class="ctop"><span class="tr"><i style="background:${t?.color}"></i>${esc(t?.name || '')}</span><span>${card.kind === 'period' ? '기간' : '개념·사건'}</span><span class="cy">${rangeOf(card)}</span></div>
+    ${revealed ? `<p class="ans">${esc(card.title)}</p>` : '<p class="ans" style="color:var(--muted)">무엇일까요?</p>'}
+    <p class="q">${revealed ? esc(card.note) : maskText(card.note, card.title)}</p>
+    ${card.who ? `<span class="who">인물·기관: ${revealed ? esc(card.who) : maskText(card.who, card.title)}</span>` : ''}
+    ${revealed && tagList(card.tags).length ? `<div class="tags">${tagList(card.tags).map(x => `<span class="tag">${esc(x)}</span>`).join('')}</div>` : ''}`;
+  acts.innerHTML = revealed
+    ? `<button class="btn ok" data-c="know">알고 있었음 · 학습 완료</button><button class="btn" data-c="again">다시 볼게요</button><span class="sp"></span><button class="btn" data-c="go">연표에서 보기</button>`
+    : `<button class="btn pri" data-c="reveal">정답 보기</button><button class="btn" data-c="skip">건너뛰기</button>`;
+}
+$('#c-acts').addEventListener('click', e => {
+  const b = e.target.closest('[data-c]'); if (!b || !card) return;
+  const a = b.dataset.c;
+  if (a === 'reveal') { revealed = true; renderCard(); $('#c-acts .btn')?.focus(); }
+  else if (a === 'skip' || a === 'again') nextCard();
+  else if (a === 'know') { const it = item(card.id); if (it && !it.learned) { checkpoint(); it.learned = true; save(); requestRender(); } nextCard(); }
+  else if (a === 'go') { const it = item(card.id); cardM.hidden = true; if (it) { select({ type: 'item', id: it.id }); focusItem(it); } }
+});
+$('#open-card').onclick = () => { cardM.hidden = false; nextCard(); $('#c-acts .btn')?.focus(); };
+$('#c-close').onclick = () => { cardM.hidden = true; };
+cardM.addEventListener('click', e => { if (e.target === cardM) cardM.hidden = true; });
+
+/* ---------- 상단 도구 ---------- */
+$('#title').value = S.title;
+$('#title').addEventListener('focus', () => { editCk = false; });
+$('#title').addEventListener('input', e => { if (!editCk) { checkpoint(); editCk = true; } S.title = e.target.value; save(); });
+$('#snap').value = String(S.snap);
+$('#snap').addEventListener('change', e => { S.snap = +e.target.value; save(); });
+let hitIdx = -1;
+$('#q').addEventListener('input', e => { S.q = e.target.value; hitIdx = -1; requestRender(); });
+$('#q').addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || e.isComposing) return;
+  const q = S.q.trim().toLowerCase(); if (!q) return;
+  const hits = ordered().filter(it => matches(it, q));
+  if (!hits.length) { toast('일치하는 항목이 없습니다'); return; }
+  hitIdx = (hitIdx + 1) % hits.length;
+  const it = hits[hitIdx]; select({ type: 'item', id: it.id }); focusItem(it);
+  toast(`${hitIdx + 1} / ${hits.length} · ${it.title}`);
+});
+function armButton(btn, label, run) {
+  btn.addEventListener('click', () => {
+    if (btn.classList.contains('warn')) { clearTimeout(btn._t); btn.classList.remove('warn'); btn.textContent = label; run(); return; }
+    btn.classList.add('warn'); btn.textContent = '한 번 더 클릭';
+    btn._t = setTimeout(() => { btn.classList.remove('warn'); btn.textContent = label; }, 3000);
+  });
+}
+armButton($('#reset'), '예시', () => { checkpoint(); const d = sample(); S.title = d.title; S.tracks = d.tracks; S.items = d.items; S.view = d.view; $('#title').value = S.title; select(null); save(); toast('예시 연표를 불러왔습니다 · Ctrl+Z로 되돌리기'); });
+armButton($('#clear'), '비우기', () => { checkpoint(); S.items = []; S.tracks = [{ id: uid(), name: '새 분야 1', color: PALETTE[0] }]; select(null); save(); toast('비웠습니다 · Ctrl+Z로 되돌리기'); });
+
+/* ---------- 내보내기 / 가져오기 ---------- */
+const modal = $('#modal'), mText = $('#m-text');
+function openModal(mode) {
+  modal.hidden = false;
+  const isEx = mode === 'export';
+  $('#m-title').textContent = isEx ? '연표 내보내기' : '연표 가져오기';
+  $('#m-desc').textContent = isEx ? '아래 JSON을 복사해 보관하세요. 학습 완료 표시까지 함께 저장됩니다. 가져오기에 붙여넣으면 그대로 복원됩니다.' : 'JSON을 붙여넣거나 .json 파일을 고른 뒤 적용을 누르세요. 현재 연표를 대체합니다(Ctrl+Z로 되돌릴 수 있음).';
+  mText.readOnly = isEx;
+  mText.value = isEx ? JSON.stringify({ title: S.title, tracks: S.tracks, items: S.items.map(strip) }, null, 2) : '';
+  $('#m-copy').hidden = !isEx; $('#m-apply').hidden = isEx; $('#m-file').hidden = isEx;
+  (isEx ? $('#m-copy') : mText).focus();
+}
+$('#export').onclick = () => openModal('export');
+$('#import').onclick = () => openModal('import');
+$('#m-close').onclick = () => { modal.hidden = true; };
+modal.addEventListener('click', e => { if (e.target === modal) modal.hidden = true; });
+$('#m-copy').onclick = () => {
+  const fallback = () => { mText.select(); toast('텍스트를 선택했습니다. Ctrl+C로 복사하세요'); };
+  try { const p = navigator.clipboard?.writeText(mText.value); if (p) p.then(() => toast('복사했습니다'), fallback); else fallback(); } catch (e) { fallback(); }
+};
+$('#m-file').addEventListener('change', e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { mText.value = r.result; }; r.readAsText(f); });
+$('#m-apply').onclick = () => {
+  try {
+    const d = sanitize(JSON.parse(mText.value));
+    checkpoint(); S.title = d.title; S.tracks = d.tracks; S.items = d.items;
+    $('#title').value = S.title; modal.hidden = true; select(null); fit();
+    toast(`분야 ${d.tracks.length}개, 항목 ${d.items.length}개를 불러왔습니다`);
+  } catch (err) { toast('불러오지 못했습니다: ' + (err.message || 'JSON 형식을 확인하세요')); }
+};
+
+/* ---------- 키보드 ---------- */
+document.addEventListener('keydown', e => {
+  const t = e.target, typing = /INPUT|TEXTAREA|SELECT/.test(t.tagName) && t.type !== 'checkbox' && t.type !== 'range';
+  const anyModal = !modal.hidden || !pathM.hidden || !cardM.hidden;
+  if (e.key === 'Escape') { if (anyModal) { modal.hidden = pathM.hidden = cardM.hidden = true; } else select(null); return; }
+  if (anyModal || typing) return;
+  if ((e.ctrlKey || e.metaKey) && e.code === 'KeyZ') { e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
+  if ((e.ctrlKey || e.metaKey) && e.code === 'KeyY') { e.preventDefault(); redo(); return; }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.code === 'BracketRight') { e.preventDefault(); step(1); return; }
+  if (e.code === 'BracketLeft') { e.preventDefault(); step(-1); return; }
+  if (e.code === 'KeyL' && sel && sel.type === 'item') { e.preventDefault(); toggleLearned(item(sel.id)); return; }
+  if ((e.key === 'Delete' || e.key === 'Backspace') && sel && sel.type === 'item') { e.preventDefault(); deleteSelected(); return; }
+  if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && sel && sel.type === 'item') {
+    e.preventDefault(); const it = item(sel.id); if (!it) return;
+    const d = (e.key === 'ArrowLeft' ? -1 : 1) * S.snap * (e.shiftKey ? 10 : 1);
+    checkpoint(); it.start += d; if (it.end != null) it.end += d; refreshInspectorValues(); save(); requestRender();
+  }
+});
+
+/* ---------- 알림 ---------- */
+let toastT = 0;
+function toast(m) { const el = $('#toast'); el.textContent = m; el.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, 2200); }
+
+/* ---------- 시작 ---------- */
+new ResizeObserver(() => requestRender()).observe(board);
+new ResizeObserver(() => requestRender()).observe(nav);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { tw.clear(); requestRender(); });
+syncUndo();
+render();
+if (migrated) { save(); setTimeout(() => toast(`새 항목 ${migrated}개를 추가했습니다 · 학습 기록은 그대로입니다`), 400); }
+})();
+</script>
+
+</body></html>
